@@ -5,6 +5,13 @@
  * Versão: 1.0
  **************************************************************************************************************************************************************************************/
 
+//Importa da biblioteca do prisma client para manipular scripts sql. Tem que ser essse nome todas as vezes, porque se não dá errado.
+const { PrismaClient } = require('@prisma/client')
+
+//Instância da classe PrismaClient.
+const prisma = new PrismaClient()
+
+
 //Função para inserir um filme no banco de dados.
 const insertFilme = async() => {
 
@@ -22,7 +29,14 @@ const deleteFilme = async() =>{
 
 //Função para listar todos os filmes do BD.
 const selectAllFilmes = async() => {
+    let sql = 'select * from tbl_filme'
+    
+    let rsfilmes = await prisma.$queryRawUnsafe(sql)
 
+    if(rsfilmes.length > 0)
+        return rsfilmes
+    else
+        return false
 }
 
 //Função para buscar um filme no Bd pelo Id.

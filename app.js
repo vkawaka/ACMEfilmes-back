@@ -20,7 +20,17 @@ app.use((request, response, next) =>{
     next()
 })
 
-app.get('/v1/ACMEFilmes/ListarFilmes', cors(), async function(request, response, next){
+/******************************Import dos arquivos da controller do projeto.*****************************/
+ const controllerFilmes = require('./controller/controller_filme.js') 
+  
+  
+ 
+ /******************************************************************************************************/
+
+
+//1.0 : retorna todos os filmes do arquivo filmes.js
+    //Período de funcionamento: jan/2024 - fev/2024
+app.get('/v1/acmefilmes/filmes', cors(), async function(request, response, next){
     let controleFilmes = require('./controller/funcoes.js')
     let todosFilmes = controleFilmes.getFilmes()
 
@@ -32,7 +42,21 @@ app.get('/v1/ACMEFilmes/ListarFilmes', cors(), async function(request, response,
     }
 })
 
-app.get('/v1/ACMEFilmes/ListarFilme', cors(), async function(request, response, next){
+//2.0 : retorna todos os filmes do Banco de Dados.
+    //Período de funcionamento: fev/2024
+app.get('/v2/acmefilmes/filmes', cors(), async function(request, response){
+    let dadosFilmes = await controllerFilmes.getListarFilmes()
+
+    if(dadosFilmes){
+        response.json(dadosFilmes)
+        response.status(200)
+    }else{
+        response.json({message: 'Nenhum registro foi encontrado'})
+        response.status(404)
+    }
+})
+
+app.get('/v1/acmefilmes/ListarFilme', cors(), async function(request, response, next){
     let idFilme = request.query.id
     let controleFilmes = require('./controller/funcoes.js')
     let filmeId = controleFilmes.getFilmeId(idFilme)
