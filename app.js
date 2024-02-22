@@ -80,6 +80,17 @@ app.get('/v1/acmefilmes/filmeNome', cors(), async function(request, response, ne
     }
 })
 
+//EndoPoint: Retorna um filme do BD de acordo com o ID
+app.get('/v1/acmefilmes/filmeId/:id', cors(), async function(request, response, next){
+    //Recebe o ID da requisição
+    let idFilme = request.params.id
+    //Encaminha o id para a controller buscar o filme.
+    let dadosFilme = await controllerFilmes.getBuscarFilme(idFilme)
+
+    response.status(dadosFilme.status_code)
+    response.json(dadosFilme)
+})
+
 app.listen('8080', function(){
     console.log('roda')
 })
