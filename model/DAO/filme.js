@@ -29,40 +29,51 @@ const deleteFilme = async() =>{
 
 //Função para listar todos os filmes do BD.
 const selectAllFilmes = async() => {
+   try {
     let sql = 'select * from tbl_filme'
     
     let rsfilmes = await prisma.$queryRawUnsafe(sql)
 
-    if(rsfilmes.length > 0)
-        return rsfilmes
-    else
-        return false
+    return rsfilmes
+
+   } catch (error) {
+
+    return false
+   }
+   
 }
 
 //Função para bbuscar um filme no BD pelo nome
 const selectByNameFilme = async(nome) => {
-     let sql = `select * from tbl_filme where tbl_filme.nome like "%${nome}%"`
+    try {
+        let sql = `select * from tbl_filme where tbl_filme.nome like "%${nome}%"`
 
-    let rsfilmeNome = await prisma.$queryRawUnsafe(sql)
-
-    if(rsfilmeNome.length > 0)
+        let rsfilmeNome = await prisma.$queryRawUnsafe(sql)
+    
         return rsfilmeNome
-    else
+        
+    } catch (error) {
+
         return false
+    }
+    
 }
 
 //Função para buscar um filme no Bd pelo Id.
 const selectByIdFilme = async(id) => {
+    try{
+
     //Script sql para filtrar pelo id
     let sql = `select * from tbl_filme where tbl_filme.id = ${id}`
 
     //Executa o sql no banco de dados
     let rsfilmeId = await prisma.$queryRawUnsafe(sql)
 
-    if(rsfilmeId.length > 0)
-        return rsfilmeId
-    else
+   return rsfilmeId
+
+    } catch(error){
         return false
+    }
 }
 
 module.exports ={

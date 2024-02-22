@@ -47,15 +47,13 @@ app.get('/v1/acmefilmes/filmes', cors(), async function(request, response, next)
 app.get('/v2/acmefilmes/filmes', cors(), async function(request, response){
     let dadosFilmes = await controllerFilmes.getListarFilmes()
 
-    if(dadosFilmes){
-        response.json(dadosFilmes)
-        response.status(200)
-    }else{
-        response.json({message: 'Nenhum registro foi encontrado'})
-        response.status(404)
-    }
+    response.status(dadosFilmes.status_code)
+    response.json(dadosFilmes)
+   
 })
 
+//1.0: retorna um filmes de acordo com o id
+    //Período de funcionamento: jan/2024 - fev/2024
 app.get('/v1/acmefilmes/ListarFilme', cors(), async function(request, response, next){
     let idFilme = request.query.id
     let controleFilmes = require('./controller/funcoes.js')
@@ -69,18 +67,19 @@ app.get('/v1/acmefilmes/ListarFilme', cors(), async function(request, response, 
     }
 })
 
+//EndPoint: Retorna um filme do BD de acordo com uma parte do nome, ou o nome inteiro
+    //Período de funcionamento: fev/2024
 app.get('/v1/acmefilmes/filmeNome', cors(), async function(request, response, next){
     let nome = request.query.nomeFilme
     let dados = await controllerFilmes.getBuscarFilmeNome(nome)
-    if(dados){
-        response.json(dados)
-        response.status(200)
-    }else{
-        response.status(404)
-    }
+
+    response.status(dados.status_code)
+    response.json(dados)
+        
 })
 
-//EndoPoint: Retorna um filme do BD de acordo com o ID
+//EndPoint: Retorna um filme do BD de acordo com o ID
+    //Período de funcionamento: fev/2024
 app.get('/v1/acmefilmes/filmeId/:id', cors(), async function(request, response, next){
     //Recebe o ID da requisição
     let idFilme = request.params.id
