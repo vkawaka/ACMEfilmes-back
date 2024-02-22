@@ -44,6 +44,27 @@ const getListarFilmes = async() => {
     }
 }
 
+//função para retornar todos os filmes.
+const getBuscarFilmeNome = async(filmeNome) => {
+    let filmesJSON = {}
+
+    //Chama a função do DAo para retornar os dados da tabela de filmes
+    let dadosFilmes = await filmeDAO.selectByNameFilme(filmeNome)
+
+    //Validação para verificar se existem dados
+    if(dadosFilmes){
+
+        //Cria o JSON para devolver para o app
+        filmesJSON.filmes = dadosFilmes
+        filmesJSON.quantidade = dadosFilmes.length
+        filmesJSON.status_code = 200
+
+        return filmesJSON
+    }else{
+        return false
+    }
+}
+
 //função para buscar um filmes pelo Id.
 const getBuscarFilme = async() => {
 
@@ -54,5 +75,6 @@ module.exports={
     setAtualizarFilme,
     setExcluirFilme,
     getListarFilmes,
-    getBuscarFilme
+    getBuscarFilme,
+    getBuscarFilmeNome
 }

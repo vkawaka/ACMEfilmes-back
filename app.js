@@ -69,6 +69,17 @@ app.get('/v1/acmefilmes/ListarFilme', cors(), async function(request, response, 
     }
 })
 
+app.get('/v1/acmefilmes/filmeNome', cors(), async function(request, response, next){
+    let nome = request.query.nomeFilme
+    let dados = await controllerFilmes.getBuscarFilmeNome(nome)
+    if(dados){
+        response.json(dados)
+        response.status(200)
+    }else{
+        response.status(404)
+    }
+})
+
 app.listen('8080', function(){
     console.log('roda')
 })
