@@ -14,9 +14,50 @@ const filmeDAO = require('../model/DAO/filme.js')
 const message = require('../module/config.js')
 
 //Função para validar e inserir um novo filme.
-const setInserirNovoFilme = async() => {
+const setInserirNovoFilme = async(dadosFilme) => {
+
+    let novoFilmeJSON = {}
+
+    if(dadosFilme.nome == ''                     || dadosFilme.nome == undefined            || dadosFilme.nome.length > 80       ||
+       dadosFilme.sinopse == ''                  || dadosFilme.sinopse == undefined         || dadosFilme.sinopse.length > 65000 ||
+       dadosFilme.duracao == ''                  || dadosFilme.duracao == undefined         || dadosFilme.duracao.length > 8     ||
+       dadosFilme.data_lancamento == ''          || dadosFilme.data_lancamento == undefined || dadosFilme.duracao.length != 10   ||
+       dadosFilme.foto_capa == ''                || dadosFilme.foto_capa == undefined       || dadosFilme.foto_capa.length > 200 ||
+       dadosFilme.valor_unitario.length > 6
+    ){
+        return message.ERROR_INVALID_REQUIRED_FIELDS //400
+    }else{
+
+        let validateStatus = false
+        if(dadosFilme.data_relancamento != null || dadosFilme.data_relancamento != ''){
+            if(dadosFilme.data_relancamento.length != 10){
+                return message.ERROR_INVALID_REQUIRED_FIELDS //400
+            }else{
+                validateStatus = true
+            }
+        }else{
+            validateStatus = true
+        }
+
+        let novoFilme = await filmeDAO.insertFilme(dadosFilme)
+
+        //Validação para verificar se o DAO inseriu os dados no BD.
+        if(novoFilme){
+
+            novoFilmeJSON.filme = dadosFilme
+            novoFilmeJSON.status = message.SUCCESS_CREATED_ITEM.status
+            novoFilmeJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
+            novoFilmeJSON.message = message.SUCCESS_CREATED_ITEM.message
+
+            return novoFilmeJSON //201
+        }else{
+            return message.ERROR_INTERNAL_SERVER_DB //500
+        }
+
+    }
 
 }
+
 
 //Função para validar e atualizar um filme.
 const setAtualizarFilme = async() => {
@@ -32,7 +73,7 @@ const setExcluirFilme = async() => {
 const getListarFilmes = async() => {
     let filmesJSON = {}
 
-    //Chama a função do DAo para retornar os dados da tabela de filmes
+    //Chama a função do DAO para retornar os dados da tabela de filmes
     let dadosFilmes = await filmeDAO.selectAllFilmes()
 
     //Validação para verificar se existem dados
@@ -54,14 +95,13 @@ const getListarFilmes = async() => {
     }
 }
 
-//função para retornar todos os filmes.
 const getBuscarFilmeNome = async(filmeNome) => {
     let nome = filmeNome
 
     let filmesJSON = {}
 
     if(nome == '' || nome == undefined){
-        return message.ERROR_INVALID_REQUEST //400
+        return message.ERROR_INVALID_REQUIRED_FIELDS //400
     }else{
          //Encaminhar o nome para o DAO.
         let dadosFilmes = await filmeDAO.selectByNameFilme(filmeNome)
