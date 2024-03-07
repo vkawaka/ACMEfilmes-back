@@ -16,7 +16,9 @@ const prisma = new PrismaClient()
 const insertFilme = async(dadosFilme) => {
 
     try {
-            let sql = `insert into tbl_filme (nome,
+        let sql
+        if(dadosFilme.data_relancamento != '' && dadosFilme.data_relancamento != null && dadosFilme.data_relancamento != undefined){
+            sql = `insert into tbl_filme (nome,
                 sinopse,
                 duracao,
                 data_lancamento,
@@ -33,7 +35,25 @@ const insertFilme = async(dadosFilme) => {
             '${dadosFilme.foto_capa}',
             '${dadosFilme.valor_unitario}'
             )`
-
+        }else{
+            sql = `insert into tbl_filme (nome,
+                sinopse,
+                duracao,
+                data_lancamento,
+                data_relancamento,
+                foto_capa,
+                valor_unitario
+            )values
+            (
+            '${dadosFilme.nome}',
+            '${dadosFilme.sinopse}',
+            '${dadosFilme.duracao}',
+            '${dadosFilme.data_lancamento}',
+            null,
+            '${dadosFilme.foto_capa}',
+            '${dadosFilme.valor_unitario}'
+            )`
+        }
             //O $executeRawUnsafe() serve para executar scripts sem retorno de dados 
             let result = await prisma.$executeRawUnsafe(sql)
 
@@ -57,6 +77,19 @@ const deleteFilme = async() =>{
 
 }
 
+const selectLastIdFilme =  async() =>{
+    try {
+        let sql = `select cast(last_insert_id() AS DECIMAL) as id from tbl_filme limit 1`
+
+        let rsIdfilme = await prisma.$queryRawUnsafe(sql)
+
+        console.log(rsIdfilme)
+
+        return rsIdfilme
+    } catch (error) {
+        return false
+    }
+}
 //Função para listar todos os filmes do BD.
 const selectAllFilmes = async() => {
    try {
@@ -110,6 +143,7 @@ module.exports ={
     insertFilme,
     updateFilme,
     deleteFilme,
+    selectLastIdFilme,
     selectAllFilmes,
     selectByIdFilme,
     selectByNameFilme

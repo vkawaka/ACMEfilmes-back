@@ -18,18 +18,22 @@ const setInserirNovoFilme = async(dadosFilme) => {
 
     let novoFilmeJSON = {}
 
-    if(dadosFilme.nome == ''                     || dadosFilme.nome == undefined            || dadosFilme.nome.length > 80       ||
-       dadosFilme.sinopse == ''                  || dadosFilme.sinopse == undefined         || dadosFilme.sinopse.length > 65000 ||
-       dadosFilme.duracao == ''                  || dadosFilme.duracao == undefined         || dadosFilme.duracao.length > 8     ||
-       dadosFilme.data_lancamento == ''          || dadosFilme.data_lancamento == undefined || dadosFilme.duracao.length != 10   ||
-       dadosFilme.foto_capa == ''                || dadosFilme.foto_capa == undefined       || dadosFilme.foto_capa.length > 200 ||
+    if(dadosFilme.nome == ''                     || dadosFilme.nome == undefined            || dadosFilme.nome == null            || dadosFilme.nome.length > 80       ||
+       dadosFilme.sinopse == ''                  || dadosFilme.sinopse == undefined         || dadosFilme.sinopse == null         || dadosFilme.sinopse.length > 65000 ||
+       dadosFilme.duracao == ''                  || dadosFilme.duracao == undefined         || dadosFilme.duracao == null         || dadosFilme.duracao.length > 8     ||
+       dadosFilme.data_lancamento == ''          || dadosFilme.data_lancamento == undefined || dadosFilme.data_lancamento == null || dadosFilme.data_lancamento.length != 10   ||
+       dadosFilme.foto_capa == ''                || dadosFilme.foto_capa == undefined       || dadosFilme.foto_capa == null       || dadosFilme.foto_capa.length > 200 ||
        dadosFilme.valor_unitario.length > 6
     ){
         return message.ERROR_INVALID_REQUIRED_FIELDS //400
     }else{
 
         let validateStatus = false
-        if(dadosFilme.data_relancamento != null || dadosFilme.data_relancamento != ''){
+
+        //Validação da data de relançamentos, já que ela não é obrigatória no Banco de Dados
+        if(dadosFilme.data_relancamento != null && dadosFilme.data_relancamento != '' && dadosFilme.data_relancamento != undefined){
+
+            //Validação para verificar se a data está com a quantidade de dígitos correta
             if(dadosFilme.data_relancamento.length != 10){
                 return message.ERROR_INVALID_REQUIRED_FIELDS //400
             }else{
@@ -39,19 +43,27 @@ const setInserirNovoFilme = async(dadosFilme) => {
             validateStatus = true
         }
 
-        let novoFilme = await filmeDAO.insertFilme(dadosFilme)
+        //Validação para verificar se podemos encaminhar os dados para o DAO.
+        if(validateStatus){
+            let novoFilme = await filmeDAO.insertFilme(dadosFilme)
 
-        //Validação para verificar se o DAO inseriu os dados no BD.
-        if(novoFilme){
+            //Validação para verificar se o DAO inseriu os dados no BD.
+            if(novoFilme){
 
-            novoFilmeJSON.filme = dadosFilme
-            novoFilmeJSON.status = message.SUCCESS_CREATED_ITEM.status
-            novoFilmeJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
-            novoFilmeJSON.message = message.SUCCESS_CREATED_ITEM.message
+                let idDAO = await filmeDAO.selectLastIdFilme()
 
-            return novoFilmeJSON //201
-        }else{
-            return message.ERROR_INTERNAL_SERVER_DB //500
+                console.log(idDAO)
+                dadosFilme.id = idDAO[0].id
+
+                novoFilmeJSON.filme = dadosFilme
+                novoFilmeJSON.status = message.SUCCESS_CREATED_ITEM.status
+                novoFilmeJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
+                novoFilmeJSON.message = message.SUCCESS_CREATED_ITEM.message
+
+                return novoFilmeJSON //201
+            }else{
+                return message.ERROR_INTERNAL_SERVER_DB //500
+            }
         }
 
     }

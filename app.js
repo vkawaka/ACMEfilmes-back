@@ -100,7 +100,6 @@ app.post('/v2/acmefilmes/filme', cors(), bodyParserJSON, async function(request,
     let dadosBody = request.body
 
     let resultDadosNovoFilme = await controllerFilmes.setInserirNovoFilme(dadosBody)
-
     response.status(resultDadosNovoFilme.status_code)
     response.json(resultDadosNovoFilme)
 
