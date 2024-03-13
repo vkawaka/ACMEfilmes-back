@@ -106,6 +106,12 @@ app.post('/v2/acmefilmes/filme', cors(), bodyParserJSON, async function(request,
 
 })
 
+app.put('/v2/acmefilmes/filme', cors(), bodyParser, async function(request, response){
+    let dadosPut = request.query
+
+    
+})
+
 app.listen('8080', function(){
     console.log('roda')
 })

@@ -68,7 +68,22 @@ const insertFilme = async(dadosFilme) => {
 }
 
 //Função para atualizar um filme no BD.
-const updateFilme = async() => {
+const updateFilme = async(dadosFilme) => {
+
+    try {
+        let sql
+            sql = `update tbl_filme set ${Object.keys(dadosFilme)[1]} = "${dadosFilme.Object.keys(dadosFilme)[1]} where tbl_filme = ${dadosFilme.id}"`
+        
+            //O $executeRawUnsafe() serve para executar scripts sem retorno de dados 
+            let result = await prisma.$executeRawUnsafe(sql)
+
+            if(result)
+                return true
+            else
+                return false
+    } catch (error) {
+        return false
+    }
 
 }
 
