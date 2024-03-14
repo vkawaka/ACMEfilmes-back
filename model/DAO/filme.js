@@ -97,7 +97,7 @@ const updateFilme = async(dadosFilme) => {
             let result = await prisma.$executeRawUnsafe(sql)
 
             if(result)
-                return true
+                return result
 
             else
                 return false
