@@ -97,19 +97,38 @@ app.get('/v2/acmefilmes/filmeId/:id', cors(), async function(request, response, 
     //Período de funcionamento: fev/2024
 app.post('/v2/acmefilmes/filme', cors(), bodyParserJSON, async function(request, response){
 
+    let contentType = request.headers['content-type']
+
     let dadosBody = request.body
 
-    let resultDadosNovoFilme = await controllerFilmes.setInserirNovoFilme(dadosBody)
+
+    let resultDadosNovoFilme = await controllerFilmes.setInserirNovoFilme(dadosBody, contentType)
     response.status(resultDadosNovoFilme.status_code)
     response.json(resultDadosNovoFilme)
 
 
 })
 
-app.put('/v2/acmefilmes/filme', cors(), bodyParser, async function(request, response){
-    let dadosPut = request.query
+app.put('/v2/acmefilmes/editarfilme/:id', cors(), bodyParserJSON, async function(request, response){
 
-    
+    let contentType = request.headers['content-type']
+    let idFilme = request.params.id
+    let dadosPut = request.body
+
+    let resultUpdateFilme = await controllerFilmes.setAtualizarFilme(idFilme, dadosPut, contentType)
+
+    response.status(resultUpdateFilme.status_code)
+    response.json(resultUpdateFilme)
+})
+
+app.delete('/v2/acmefilmes/deletefilmeId/:id', cors(), async function(request, response){
+    //Recebe o ID da requisição
+    let idFilme = request.params.id
+    //Encaminha o id para a controller buscar o filme.
+    let dadosFilme = await controllerFilmes.setExcluirFilme(idFilme)
+
+    response.status(dadosFilme.status_code)
+    response.json(dadosFilme)
 })
 
 app.listen('8080', function(){

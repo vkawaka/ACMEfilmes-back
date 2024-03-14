@@ -72,13 +72,33 @@ const updateFilme = async(dadosFilme) => {
 
     try {
         let sql
-            sql = `update tbl_filme set ${Object.keys(dadosFilme)[1]} = "${dadosFilme.Object.keys(dadosFilme)[1]} where tbl_filme = ${dadosFilme.id}"`
+        if(dadosFilme.data_relancamento != '' && dadosFilme.data_relancamento != null && dadosFilme.data_relancamento != undefined){
+            sql = `update tbl_filme set 
+            nome = '${dadosFilme.nome}',
+            sinopse =  '${dadosFilme.sinopse}',
+            duracao = '${dadosFilme.duracao}',
+            data_lancamento = '${dadosFilme.data_lancamento}',
+            data_relancamento = '${dadosFilme.data_relancamento}',
+            foto_capa = '${dadosFilme.foto_capa}',
+            valor_unitario = '${dadosFilme.valor_unitario}'
+            where tbl_filme.id = ${dadosFilme.id}`
+        }else{
+            sql = `update tbl_filme set 
+            nome = '${dadosFilme.nome}',
+            sinopse =  '${dadosFilme.sinopse}',
+            duracao = '${dadosFilme.duracao}',
+            data_lancamento = '${dadosFilme.data_lancamento}',
+            foto_capa = '${dadosFilme.foto_capa}',
+            valor_unitario = '${dadosFilme.valor_unitario}'
+            where tbl_filme.id = ${dadosFilme.id}`
+        }
         
             //O $executeRawUnsafe() serve para executar scripts sem retorno de dados 
             let result = await prisma.$executeRawUnsafe(sql)
 
             if(result)
                 return true
+
             else
                 return false
     } catch (error) {
@@ -88,8 +108,20 @@ const updateFilme = async(dadosFilme) => {
 }
 
 //função para excluir um filme no BD.
-const deleteFilme = async() =>{
+const deleteFilme = async(id) =>{
+    try{
 
+        let sql = `delete from tbl_filme where tbl_filme.id = ${id}`
+    
+        //Executa o sql no banco de dados
+        let rsdeletedfilme = await prisma.$queryRawUnsafe(sql)
+
+    
+       return rsdeletedfilme
+    
+        } catch(error){
+            return false
+        }
 }
 
 const selectLastIdFilme =  async() =>{
@@ -98,7 +130,6 @@ const selectLastIdFilme =  async() =>{
 
         let rsIdfilme = await prisma.$queryRawUnsafe(sql)
 
-        console.log(rsIdfilme)
 
         return rsIdfilme
     } catch (error) {
