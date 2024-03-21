@@ -81,7 +81,8 @@ const setInserirNovoFilme = async(dadosFilme, contentType) => {
 
 //Função para validar e atualizar um filme.
 const setAtualizarFilme = async(id, dadosFilme, contentType) => {
-
+    try {
+        
     if(String(contentType).toLowerCase() == 'application/json'){
         let novoFilmeJSON = {}
 
@@ -140,6 +141,9 @@ const setAtualizarFilme = async(id, dadosFilme, contentType) => {
                 }
             }
         }
+    }
+    } catch (error) {
+        return message.ERROR_INTERNAL_SERVER
     }
 }
 
