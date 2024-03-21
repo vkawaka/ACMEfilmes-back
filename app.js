@@ -121,7 +121,7 @@ app.put('/v2/acmefilmes/filme/:id', cors(), bodyParserJSON, async function(reque
     response.json(resultUpdateFilme)
 })
 
-app.delete('/v2/acmefilmes/filmeId/:id', cors(), async function(request, response){
+app.delete('/v2/acmefilmes/filme/:id', cors(), async function(request, response){
     //Recebe o ID da requisição
     let idFilme = request.params.id
     //Encaminha o id para a controller buscar o filme.
