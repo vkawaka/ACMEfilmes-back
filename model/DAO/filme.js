@@ -96,6 +96,7 @@ const updateFilme = async(dadosFilme) => {
             //O $executeRawUnsafe() serve para executar scripts sem retorno de dados 
             let result = await prisma.$executeRawUnsafe(sql)
 
+
             if(result)
                 return true
 

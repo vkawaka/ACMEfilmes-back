@@ -109,7 +109,7 @@ app.post('/v2/acmefilmes/filme', cors(), bodyParserJSON, async function(request,
 
 })
 
-app.put('/v2/acmefilmes/editarfilme/:id', cors(), bodyParserJSON, async function(request, response){
+app.put('/v2/acmefilmes/filme/:id', cors(), bodyParserJSON, async function(request, response){
 
     let contentType = request.headers['content-type']
     let idFilme = request.params.id
@@ -121,7 +121,7 @@ app.put('/v2/acmefilmes/editarfilme/:id', cors(), bodyParserJSON, async function
     response.json(resultUpdateFilme)
 })
 
-app.delete('/v2/acmefilmes/deletefilmeId/:id', cors(), async function(request, response){
+app.delete('/v2/acmefilmes/filmeId/:id', cors(), async function(request, response){
     //Recebe o ID da requisição
     let idFilme = request.params.id
     //Encaminha o id para a controller buscar o filme.
