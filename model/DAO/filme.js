@@ -24,6 +24,7 @@ const insertFilme = async(dadosFilme) => {
                 data_lancamento,
                 data_relancamento,
                 foto_capa,
+                midia_fundo,
                 valor_unitario
             )values
             (
@@ -33,6 +34,7 @@ const insertFilme = async(dadosFilme) => {
             '${dadosFilme.data_lancamento}',
             '${dadosFilme.data_relancamento}',
             '${dadosFilme.foto_capa}',
+            '${dadosFilme.midia_fundo}',
             '${dadosFilme.valor_unitario}'
             )`
         }else{
@@ -42,6 +44,7 @@ const insertFilme = async(dadosFilme) => {
                 data_lancamento,
                 data_relancamento,
                 foto_capa,
+                midia_fundo,
                 valor_unitario
             )values
             (
@@ -51,6 +54,7 @@ const insertFilme = async(dadosFilme) => {
             '${dadosFilme.data_lancamento}',
             null,
             '${dadosFilme.foto_capa}',
+            '${dadosFilme.midia_fundo}',
             '${dadosFilme.valor_unitario}'
             )`
         }
@@ -80,6 +84,7 @@ const updateFilme = async(dadosFilme) => {
             data_lancamento = '${dadosFilme.data_lancamento}',
             data_relancamento = '${dadosFilme.data_relancamento}',
             foto_capa = '${dadosFilme.foto_capa}',
+            midia_fundo = '${dadosFilme.midia_fundo}',
             valor_unitario = '${dadosFilme.valor_unitario}'
             where tbl_filme.id = ${dadosFilme.id}`
         }else{
@@ -89,6 +94,7 @@ const updateFilme = async(dadosFilme) => {
             duracao = '${dadosFilme.duracao}',
             data_lancamento = '${dadosFilme.data_lancamento}',
             foto_capa = '${dadosFilme.foto_capa}',
+            midia_fundo = '${dadosFilme.midia_fundo}',
             valor_unitario = '${dadosFilme.valor_unitario}'
             where tbl_filme.id = ${dadosFilme.id}`
         }
