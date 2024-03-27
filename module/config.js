@@ -17,7 +17,7 @@
 
  /********************** MENSAGENS DE SUCESSO ********************/
  const SUCCESS_CREATED_ITEM = {status: true, status_code: 201, message: 'Item criado com sucesso!'}
- const SUCCESS_DELETED_ITEM= {status: true, status_code: 200, message: 'Item deletado co sucesso!'}
+ const SUCCESS_DELETED_ITEM= {status: true, status_code: 200, message: 'Item deletado com sucesso!'}
  const SUCCESS_UPDATED_ITEM = {status: true, status_code: 200, message: 'Item atualizado com sucesso!'}
  
 

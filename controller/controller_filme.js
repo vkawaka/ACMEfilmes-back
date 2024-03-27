@@ -82,13 +82,16 @@ const setInserirNovoFilme = async(dadosFilme, contentType) => {
 
 //Função para validar e atualizar um filme.
 const setAtualizarFilme = async(id, dadosFilme, contentType) => {
-
     try {
-        if(String(contentType).toLowerCase() == 'application/json'){
-            let novoFilmeJSON = {}
-    
-            if(id == '' || id == undefined || isNaN(id) ||
-            dadosFilme.nome == ''                     || dadosFilme.nome == undefined            || dadosFilme.nome == null            || dadosFilme.nome.length > 80       ||
+        
+    if(String(contentType).toLowerCase() == 'application/json'){
+        let novoFilmeJSON = {}
+
+        let idFilme = id
+        if(idFilme == '' || idFilme == undefined || isNaN(idFilme)){
+            return message.ERROR_INVALID_ID
+        }else{
+            if(dadosFilme.nome == ''                     || dadosFilme.nome == undefined            || dadosFilme.nome == null            || dadosFilme.nome.length > 80       ||
             dadosFilme.sinopse == ''                  || dadosFilme.sinopse == undefined         || dadosFilme.sinopse == null         || dadosFilme.sinopse.length > 65000 ||
             dadosFilme.duracao == ''                  || dadosFilme.duracao == undefined         || dadosFilme.duracao == null         || dadosFilme.duracao.length > 8     ||
             dadosFilme.data_lancamento == ''          || dadosFilme.data_lancamento == undefined || dadosFilme.data_lancamento == null || dadosFilme.data_lancamento.length != 10   ||
@@ -98,12 +101,14 @@ const setAtualizarFilme = async(id, dadosFilme, contentType) => {
             ){
                 return message.ERROR_INVALID_REQUIRED_FIELDS //400
             }else{
-    
+
                 let validateStatus = false
-    
+
+                let filmeById = await filmeDAO.selectByIdFilme(idFilme)
+
                 //Validação da data de relançamentos, já que ela não é obrigatória no Banco de Dados
                 if(dadosFilme.data_relancamento != null && dadosFilme.data_relancamento != '' && dadosFilme.data_relancamento != undefined){
-    
+
                     //Validação para verificar se a data está com a quantidade de dígitos correta
                     if(dadosFilme.data_relancamento.length != 10){
                         return message.ERROR_INVALID_REQUIRED_FIELDS //400
@@ -113,27 +118,32 @@ const setAtualizarFilme = async(id, dadosFilme, contentType) => {
                 }else{
                     validateStatus = true
                 }
-    
-                //Validação para verificar se podemos encaminhar os dados para o DAO.
-                if(validateStatus){
-                    dadosFilme.id = id
-    
-                    let novoFilme = await filmeDAO.updateFilme(dadosFilme)
-    
-                    //Validação para verificar se o DAO inseriu os dados no BD.
-                    if(novoFilme){
-                        novoFilmeJSON.filme = dadosFilme
-                        novoFilmeJSON.status = message.SUCCESS_UPDATED_ITEM.status
-                        novoFilmeJSON.status_code = message.SUCCESS_UPDATED_ITEM.status_code
-                        novoFilmeJSON.message = message.SUCCESS_UPDATED_ITEM.message
-    
-                        return novoFilmeJSON //201
-                    }else{
-                        return message.ERROR_INTERNAL_SERVER_DB //500
+
+                if(filmeById.length > 0){
+                      //Validação para verificar se podemos encaminhar os dados para o DAO.
+                    if(validateStatus){
+                        dadosFilme.id = idFilme
+
+                        let novoFilme = await filmeDAO.updateFilme(dadosFilme)
+
+                        //Validação para verificar se o DAO inseriu os dados no BD.
+                        if(novoFilme){
+                            novoFilmeJSON.filme = dadosFilme
+                            novoFilmeJSON.status = message.SUCCESS_UPDATED_ITEM.status
+                            novoFilmeJSON.status_code = message.SUCCESS_UPDATED_ITEM.status_code
+                            novoFilmeJSON.message = message.SUCCESS_UPDATED_ITEM.message
+
+                            return novoFilmeJSON //201
+                        }else{
+                            return message.ERROR_INTERNAL_SERVER_DB //500
+                        }
                     }
+                }else{
+                    return message.ERROR_NOT_FOUND
                 }
             }
         }
+    }
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
@@ -149,16 +159,22 @@ const setExcluirFilme = async(id) => {
      if(idFilme == '' || idFilme == undefined || isNaN(idFilme)){
          return message.ERROR_INVALID_ID //400
      }else{
-         let filmeDeletado = await filmeDAO.deleteFilme(idFilme)
+        let filmeById = await filmeDAO.selectByIdFilme(idFilme)
+
+        if(filmeById.length > 0){
+            let filmeDeletado = await filmeDAO.deleteFilme(idFilme)
  
-         if(filmeDeletado){
-             return message.SUCCESS_DELETED_ITEM
-         }else{
-             return message.ERROR_INTERNAL_SERVER_DB //500
-         }
-     }
+            if(filmeDeletado){
+                return message.SUCCESS_DELETED_ITEM
+            }else{
+                return message.ERROR_INTERNAL_SERVER_DB //500
+            }
+        }else{
+            return message.ERROR_NOT_FOUND //404
+        }
+    }
    } catch (error) {
-    return message.ERROR_INTERNAL_SERVER
+    return message.ERROR_INTERNAL_SERVER //500
    }
 }
 
