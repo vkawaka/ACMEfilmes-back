@@ -25,7 +25,8 @@ const insertFilme = async(dadosFilme) => {
                 data_relancamento,
                 foto_capa,
                 midia_fundo,
-                valor_unitario
+                valor_unitario,
+                id_classificacao
             )values
             (
             '${dadosFilme.nome}',
@@ -35,7 +36,8 @@ const insertFilme = async(dadosFilme) => {
             '${dadosFilme.data_relancamento}',
             '${dadosFilme.foto_capa}',
             '${dadosFilme.midia_fundo}',
-            '${dadosFilme.valor_unitario}'
+            '${dadosFilme.valor_unitario}',
+            ${dadosFilme.id_classificacao}
             )`
         }else{
             sql = `insert into tbl_filme (nome,
@@ -45,7 +47,8 @@ const insertFilme = async(dadosFilme) => {
                 data_relancamento,
                 foto_capa,
                 midia_fundo,
-                valor_unitario
+                valor_unitario,
+                id_classificacao
             )values
             (
             '${dadosFilme.nome}',
@@ -55,7 +58,8 @@ const insertFilme = async(dadosFilme) => {
             null,
             '${dadosFilme.foto_capa}',
             '${dadosFilme.midia_fundo}',
-            '${dadosFilme.valor_unitario}'
+            '${dadosFilme.valor_unitario}',
+            ${dadosFilme.id_classificacao}
             )`
         }
             //O $executeRawUnsafe() serve para executar scripts sem retorno de dados 

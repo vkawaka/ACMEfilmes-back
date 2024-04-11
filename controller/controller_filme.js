@@ -97,7 +97,8 @@ const setAtualizarFilme = async(id, dadosFilme, contentType) => {
             dadosFilme.data_lancamento == ''          || dadosFilme.data_lancamento == undefined || dadosFilme.data_lancamento == null || dadosFilme.data_lancamento.length != 10   ||
             dadosFilme.foto_capa == ''                || dadosFilme.foto_capa == undefined       || dadosFilme.foto_capa == null       || dadosFilme.foto_capa.length > 200 ||
             dadosFilme.midia_fundo == ''                || dadosFilme.midia_fundo == undefined       || dadosFilme.midia_fundo == null       || dadosFilme.midia_fundo.length > 65000 ||
-            dadosFilme.valor_unitario.length > 6
+            dadosFilme.valor_unitario.length > 6 ||
+            dadosFilme.id_classificacao == '' || dadosFilme.id_classificacao == undefined || isNaN(dadosFilme.id_classificacao)
             ){
                 return message.ERROR_INVALID_REQUIRED_FIELDS //400
             }else{
