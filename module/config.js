@@ -12,6 +12,7 @@
  const ERROR_INTERNAL_SERVER_DB = {status: false, status_code: 500, message: 'Não foi possível processar a requisição devido a um problema na comunicação com o Banco de Dados. Contate o Administrador da API'}
  const ERROR_INTERNAL_SERVER = {status: false, status_code: 500, message: 'Não foi possível executar a requisição devido a um problema na camada de negócio/controller do projeto. Contrate o Administrador da API.'}
  const ERROR_UNSUPORTED_CONTENT_TYPE = {status: false, status_code: 415, message: 'O content-type encaminhado na requisição não é permitido pelo servidor da API. Deve-se utiliza somente application/json'}
+ const ERROR_ALREADY_EXIST = {status: false, status_code: 400, message: 'Alguma informação da requisição já existe no BD'}
 
 
 
@@ -28,6 +29,7 @@
     ERROR_INTERNAL_SERVER,
     ERROR_INVALID_REQUIRED_FIELDS,
     ERROR_UNSUPORTED_CONTENT_TYPE,
+    ERROR_ALREADY_EXIST,
     SUCCESS_CREATED_ITEM,
     SUCCESS_DELETED_ITEM,
     SUCCESS_UPDATED_ITEM

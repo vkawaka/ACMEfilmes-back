@@ -5,29 +5,94 @@
  * Versão: 1.0
  **************************************************************************************************************************************************************************************/
 
-//Importa da biblioteca do prisma client para manipular scripts sql. Tem que ser essse nome todas as vezes, porque se não dá errado.
 const { PrismaClient } = require('@prisma/client')
+const { PrismaClientExtends } = require('@prisma/client/extension')
 
-//Instância da classe PrismaClient.
 const prisma = new PrismaClient()
 
-const insertClassificacao = async() => {
+const insertClassificacao = async(dadosClassificacao) => {
+    try {
+        let sql = `INSERT INTO tbl_classificacao (faixa_etaria, classificacao, caracteristica, icone) VALUES
+        ('${dadosClassificacao.faixa_etaria}', "${dadosClassificacao.classificacao}", "${dadosClassificacao.caracteristica}", "${dadosClassificacao.icone}")`
 
+        let rsClassificacao = await prisma.$executeRawUnsafe(sql)
+
+        if(rsClassificacao)
+            return rsClassificacao
+        else
+            return false
+    } catch (error) {
+        return false
+    }
 }
 const selectAllClassificacao = async() => {
-    
+    try {
+        let sql = `SELECT * FROM tbl_classificacao`
+
+        let rsClassificacao = await prisma.$queryRawUnsafe(sql)
+
+        if(rsClassificacao)
+            return rsClassificacao
+        else
+            return false
+
+    } catch (error) {
+        return false
+    }
 }
-const selectClassificacaoById = async() => {
-    
+const selectClassificacaoById = async(id) => {
+    try {
+        let sql = `SELECT * FROM tbl_classificacao WHERE tbl_classificacao.id = ${id}`
+        let rsClassi = await prisma.$queryRawUnsafe(sql)
+
+        if(rsClassi)
+            return rsClassi
+        else 
+            return false
+    } catch (error) {
+        return false
+    }
 }
-const deleteClassificacao = async() => {
-    
+const deleteClassificacao = async(id) => {
+    try {
+        let sql = `DELETE FROM tbl_classificacao WHERE tbl_classificacao.id = ${id}`
+
+        let rsdeletedClassificacao = prisma.$queryRawUnsafe(sql)
+        return rsdeletedClassificacao
+    } catch (error) {
+        return false
+    }
 }
-const updateClassificacao = async() => {
-    
+const updateClassificacao = async(dados) => {
+   try {
+    let sql = `UPDATE tbl_classificacao SET 
+    faixa_etaria = ${dados.faixa_etaria}, 
+    classificacao = ${dados.classificacao}, 
+    caracteristica = ${dados.classificacao}, 
+    icone = ${dados.icone} 
+    WHERE tbl_classificacao = ${dados.id}`
+
+    let result = await prisma.$executeRawUnsafe(sql)
+
+    if(result)
+        return result
+    else
+        return false
+   } catch (error) {
+    return false
+   }
 }
 const selectLastId = async() => {
-    
+    try {
+        let sql = `select cast(last_insert_id() AS DECIMAL) as id from tbl_classificacao limit 1`
+
+        let rsIdClassificacao = await prisma.$queryRawUnsafe(sql)
+
+
+        return rsIdClassificacao
+    } catch (error) {
+        return false
+    }
 }
 
 module.exports={

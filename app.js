@@ -24,6 +24,8 @@ app.use((request, response, next) =>{
  const controllerFilmes = require('./controller/controller_filme.js') 
 
  const controllerGeneros = require('./controller/controller_genero.js')
+
+ const controllerClassificacao = require('./controller/controller_classificacao.js')
   
  
  /******************************************************************************************************/
@@ -150,19 +152,39 @@ app.delete('/v2/acmefilmes/genero/:id', cors(), async function(request, response
 
 
 app.get('/v2/acmefilmes/classificacao', cors(), async function(request, response){
+    let dadosClassi = await controllerClassificacao.getListarClassificacao()
+    response.status(200)
+    response.json(dadosClassi)
 
 })
 app.get('/v2/acmefilmes/classificacao/:id', cors(), async function(request, response){
+    let id = request.params.id
+    let dados = await controllerClassificacao.getBuscarClassificacao(id)
 
+    response.status(dados.status)
+    response.json(dados)
 })
 app.post('/v2/acmefilmes/classificacao', cors(), bodyParserJSON, async function(request, response){
-
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+    let newClassificacao = await controllerClassificacao.setInserirClassificacao(dadosBody, contentType)
+    response.status(newClassificacao.status_code)
+    response.json(newClassificacao)
 })
-app.put('/v2/acmefilmes/classificacao', cors(), bodyParserJSON, async function(request, response){
+app.put('/v2/acmefilmes/classificacao/:id', cors(), bodyParserJSON, async function(request, response){
+    let contentType = request.headers['content-type']
+    let idClassi = request.params.id
+    let dadosPUT = request.body
 
+    let resultUpdateClassificacao = await controllerClassificacao.setAtualizarClassificacao(idClassi, dadosPUT, contentType)
+    response.status(resultUpdateClassificacao.status_code)
+    response.json(resultUpdateClassificacao)
 })
-app.delete('/v2/acmefilmes/classificacao', cors(), async function(request, response){
-    
+app.delete('/v2/acmefilmes/classificacao/:id', cors(), async function(request, response){
+    let idClassi = request.params.id
+    let dadosCLassi = await controllerClassificacao.setDeletarClassificacao(idClassi)
+    response.status(dadosCLassi.status_code)
+    response.json(dadosCLassi)
 })
 
 app.listen('8080', function(){
