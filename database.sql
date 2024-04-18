@@ -68,12 +68,24 @@ null,
 CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_ator` (
   id INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(100) NOT NULL,
-  nacionalidade VARCHAR(60) NOT NULL,
   data_nascimento DATE NULL,
   biografia TEXT NULL,
-  PRIMARY KEY (`id`)
+  id_sexo INT NOT NULL,
+  PRIMARY KEY (`id`),
+  
+CONSTRAINT `fk_sexo_ator`
+FOREIGN KEY (`id_sexo`)
+REFERENCES `db_acme_filmes_turma_bb`.`tbl_sexo` (`id`)
   );
-
+  
+  INSERT INTO tbl_ator (nome, data_nascimento, biografia, id_sexo) VALUES 
+       ("teste",
+       "undefined",
+       "nasceu e pa ne",
+       "1");
+  
+ALTER TABLE tbl_ator
+	MODIFY COLUMN data_nascimento DATE NOT NULL;
 -- -----------------------------------------------------
 -- Table `db_acme_filmes_turma_bb`.`tbl_diretor`
 -- -----------------------------------------------------
@@ -83,7 +95,12 @@ CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_diretor` (
   nacionalidade VARCHAR(60) NOT NULL,
   data_nascimento DATE NULL,
   biografia TEXT NULL,
-  PRIMARY KEY (`id`)
+  id_sexo INT NOT NULL,
+  PRIMARY KEY (`id`),
+  
+CONSTRAINT `fk_sexo_diretor`
+FOREIGN KEY (`id_sexo`)
+REFERENCES `db_acme_filmes_turma_bb`.`tbl_sexo` (`id`)
   );
 
 
@@ -177,6 +194,37 @@ CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_nacionalidade` (
   nome VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`)
   );
+INSERT INTO `tbl_nacionalidade`(`nome`) VALUES
+('Afica do Sul'),
+('Alemanha'),
+('Argentina'),
+('Austrália'),
+('Brasil'),
+('Canadá'),
+('China'),
+('Coreia do Sul'),
+('Espanha'),
+('Estados Unidos'),
+('Filipinas'),
+('Finlândia'),
+('França'),
+('India'),
+('Inglaterra'),
+('Itália'),
+('Jamaica'),
+('Japão'),
+('Marrocos'),
+('México'),
+('Nova Zelândia'),
+('Portugal'),
+('Reino Unido'),
+('República Dominicana'),
+('República Tcheca'),
+('Rússia'),
+('Tailandia'),
+('Turquia');
+
+select * from tbl_nacionalidade;
 
 -- -----------------------------------------------------
 -- Table `db_acme_filmes_turma_bb`.`tbl_sexo`
@@ -187,45 +235,9 @@ CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_sexo` (
   nome VARCHAR(15) NOT NULL,
   PRIMARY KEY (`id`)
   );
-
-
--- -----------------------------------------------------
--- Table `db_acme_filmes_turma_bb`.`tbl_ator_sexo`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_ator_sexo` (
-  id INT NOT NULL AUTO_INCREMENT,
-  id_ator INT NOT NULL,
-  id_sexo INT NOT NULL,
-
-  PRIMARY KEY (`id`),
- 
-  CONSTRAINT `fk_ator_atorsexo`
-  FOREIGN KEY (`id_ator`)
-  REFERENCES `db_acme_filmes_turma_bb`.`tbl_ator` (`id`),
-  CONSTRAINT `fk_sexo_atorsexo`
-  FOREIGN KEY (`id_sexo`)
-  REFERENCES `db_acme_filmes_turma_bb`.`tbl_sexo` (`id`)
-);
-
-
--- -----------------------------------------------------
--- Table `db_acme_filmes_turma_bb`.`tbl_diretor_sexo`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_diretor_sexo` (
-  id INT NOT NULL AUTO_INCREMENT,
-  id_diretor INT NOT NULL,
-  id_sexo INT NOT NULL,
- 
-  PRIMARY KEY (`id`),
-  
-  CONSTRAINT `fk_diretor_diretorsexo`
-  FOREIGN KEY (`id_diretor`)
-  REFERENCES `db_acme_filmes_turma_bb`.`tbl_diretor` (`id`),
-  CONSTRAINT `fk_sexo_diretorsexo`
-  FOREIGN KEY (`id_sexo`)
-  REFERENCES `db_acme_filmes_turma_bb`.`tbl_sexo` (`id`)
-);
-
+INSERT INTO `tbl_sexo`(`sigla`,`nome`) VALUES
+('F', 'feminino'),
+('M', 'masculino');
 
 -- -----------------------------------------------------
 -- Table `db_acme_filmes_turma_bb`.`tbl_ator_nacionalidade`
@@ -244,6 +256,8 @@ CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_ator_nacionalidade` (
   FOREIGN KEY (`id_nacionalidade`)
   REFERENCES `db_acme_filmes_turma_bb`.`tbl_nacionalidade` (`id`)
 );
+
+select * from tbl_ator_nacionalidade;
 
 
 -- -----------------------------------------------------
