@@ -20,6 +20,7 @@ const getListarGeneros = async() => {
 
     if(dadosGeneros){
         if(dadosGeneros.length > 0){
+            
             generosJSON.generos = dadosGeneros
             generosJSON.quantidade = dadosGeneros.length
             generosJSON.status_code = 200

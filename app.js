@@ -26,6 +26,8 @@ app.use((request, response, next) =>{
  const controllerGeneros = require('./controller/controller_genero.js')
 
  const controllerClassificacao = require('./controller/controller_classificacao.js')
+
+ const controllerAtor = require('./controller/controller_ator.js')
   
  
  /******************************************************************************************************/
@@ -114,7 +116,7 @@ app.delete('/v2/acmefilmes/filme/:id', cors(), async function(request, response)
     response.json(dadosFilme)
 })
 
-
+/*********************************************************************************************************************************************/
 
 app.get('/v2/acmefilmes/genero', cors(), async function(request, response) {
     let dadosGeneros = await controllerGeneros.getListarGeneros()
@@ -150,6 +152,7 @@ app.delete('/v2/acmefilmes/genero/:id', cors(), async function(request, response
     response.json(dadosGenero)
 })
 
+/*********************************************************************************************************************************/
 
 app.get('/v2/acmefilmes/classificacao', cors(), async function(request, response){
     let dadosClassi = await controllerClassificacao.getListarClassificacao()
@@ -186,6 +189,47 @@ app.delete('/v2/acmefilmes/classificacao/:id', cors(), async function(request, r
     response.status(dadosCLassi.status_code)
     response.json(dadosCLassi)
 })
+
+
+/****************************************************************************************************************/
+app.get('/v2/acmefilmes/ator', cors(), async function(request, response) {
+    let dadosAtor = await controllerAtor.getListarAtores()
+    console.log(dadosAtor);
+    response.status(200)
+    response.json(dadosAtor)
+})
+app.get('/v2/acmefilmes/ator/:id', cors(), async function(request, response) {
+    
+})
+app.post('/v2/acmefilmes/ator', cors(), bodyParserJSON, async function(request, response) {
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+    let newAtor = await controllerAtor.setInserirAtor(dadosBody, contentType)
+    response.status(newAtor.status_code)
+    response.json(newAtor)
+})
+app.put('/v2/acmefilmes/ator/:id', cors(), bodyParserJSON, async function(request, response) {
+    
+})
+app.delete('/v2/acmefilmes/ator/:id', cors(), async function(request, response) {
+    
+})
+
+// app.get('/v2/acmefilmes/ator', cors(), async function(request, response) {
+    
+// })
+// app.get('/v2/acmefilmes/ator/:id', cors(), async function(request, response) {
+    
+// })
+// app.post('/v2/acmefilmes/ator', cors(), bodyParserJSON, async function(request, response) {
+    
+// })
+// app.put('/v2/acmefilmes/ator', cors(), bodyParserJSON, async function(request, response) {
+    
+// })
+// app.delete('/v2/acmefilmes/ator/:id', cors(), async function(request, response) {
+    
+// })
 
 app.listen('8080', function(){
     console.log('roda')
