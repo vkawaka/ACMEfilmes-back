@@ -66,13 +66,15 @@ const deleteClassificacao = async(id) => {
 const updateClassificacao = async(dados) => {
    try {
     let sql = `UPDATE tbl_classificacao SET 
-    faixa_etaria = ${dados.faixa_etaria}, 
-    classificacao = ${dados.classificacao}, 
-    caracteristica = ${dados.classificacao}, 
-    icone = ${dados.icone} 
-    WHERE tbl_classificacao = ${dados.id}`
+    faixa_etaria = "${dados.faixa_etaria}", 
+    classificacao = "${dados.classificacao}", 
+    caracteristica = "${dados.classificacao}", 
+    icone = "${dados.icone}" 
+    WHERE tbl_classificacao.id = '${dados.id}';`
+    console.log(sql);
 
     let result = await prisma.$executeRawUnsafe(sql)
+
 
     if(result)
         return result

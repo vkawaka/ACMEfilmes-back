@@ -67,11 +67,10 @@ const updateAtor = async(id, dadosBody) => {
     try {
         let sql
         if(dadosBody.biografia != '' && dadosBody.biografia != null && dadosBody.biografia != undefined){
-            sql = `UPDATE tbl_ator SET nome = '${dadosBody.nome}', data_nascimento = '${dadosBody.data_nascimento}', id_sexo = '${dadosBody.id_sexo}' WHERE tbl_genero.id = ${id}`
+            sql = `UPDATE tbl_ator SET nome = '${dadosBody.nome}', data_nascimento = '${dadosBody.data_nascimento}', id_sexo = '${dadosBody.id_sexo}' WHERE tbl_ator.id = ${id};`
         }else{
-           sql = `UPDATE tbl_ator SET nome = '${dadosBody.nome}', data_nascimento = '${dadosBody.data_nascimento}', biografia = ${dadosBody.biografia}, id_sexo = ${dadosBody.id_sexo} WHERE tbl_genero.id = ${id}`
+           sql = `UPDATE tbl_ator SET nome = '${dadosBody.nome}', data_nascimento = '${dadosBody.data_nascimento}', biografia = ${dadosBody.biografia}, id_sexo = ${dadosBody.id_sexo} WHERE tbl_ator.id = ${id};`
         }
-
         let rsupdateator = await prisma.$queryRawUnsafe(sql)
 
         if(rsupdateator)

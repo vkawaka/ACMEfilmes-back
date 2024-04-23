@@ -108,9 +108,9 @@ const setAtualizarClassificacao = async(id, dadosBody, contentType) => {
                     let verifyId = await classificacaoDAO.selectClassificacaoById(idClassi)
 
                     if(verifyId){
-                        let exists = false
                         dadosBody.id = idClassi
-                        
+                        let attClassi = await classificacaoDAO.updateClassificacao(dadosBody)
+                        if (attClassi) {
                             classJSON.classificacao = dadosBody
                             classJSON.staus = message.SUCCESS_UPDATED_ITEM.status
                             classJSON.status_code = message.SUCCESS_UPDATED_ITEM.status_code
@@ -118,6 +118,9 @@ const setAtualizarClassificacao = async(id, dadosBody, contentType) => {
 
                             return classJSON
 
+                        } else {
+                            return message.ERROR_INTERNAL_SERVER_DB
+                        }
                     }else{
                         return message.ERROR_NOT_FOUND
                     }

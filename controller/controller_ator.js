@@ -112,18 +112,27 @@ const getListarAtores = async() => {
 }
 const getBuscarAtor = async(id) => {
     try {
-        let idClassificacao = id
-        if(idClassificacao == undefined || idClassificacao == '' || idClassificacao == null || isNaN(idClassificacao)){
+        let idAtor = id
+        if(idAtor == undefined || idAtor == '' || idAtor == null || isNaN(idAtor)){
             return message.ERROR_INVALID_ID
         }else{
-            let classiJSON = {}
+            let atorJSON = {}
 
-            let dadoClassi = await classificacaoDAO.selectClassificacaoById(idClassificacao)
-            if(dadoClassi){
-                classiJSON.classificacao = dadoClassi
-                classiJSON.status = 200
+            let dadosAtor = await atorDAO.selectAtorById(idAtor)
+            if(dadosAtor){
+                console.log(dadosAtor)
 
-                return classiJSON
+                let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(idAtor)
+                dadosAtor[0].nacionalidade = nasci
+                let sexo = await sexoDAO.selectSexoById(dadosAtor[0].id_sexo)
+                console.log(dadosAtor.id_sexo);
+                delete dadosAtor[0].id_sexo
+                dadosAtor[0].sexo = sexo
+                console.log(dadosAtor)
+                atorJSON.ator = dadosAtor
+                atorJSON.status = 200
+
+                return atorJSON
             }else{
                 return message.ERROR_INTERNAL_SERVER_DB
             }
@@ -132,35 +141,97 @@ const getBuscarAtor = async(id) => {
         return message.ERROR_INTERNAL_SERVER
     }
 }
-const setAtualizarClassificacao = async(id, dadosBody, contentType) => {
+
+// "nome": "teste 1",
+//             "data_nascimento": "2024-04-18T00:00:00.000Z",
+//             "biografia": "nascer reproduzir e morrer",
+//             "nacionalidade": [
+//                 {
+//                     "id": 5,
+//                     "nome": "Brasil"
+//                 },
+//                 {
+//                     "id": 13,
+//                     "nome": "França"
+//                 }
+//             ],
+//             "sexo": [
+//                 {
+//                     "id": 1,
+//                     "sigla": "F",
+//                     "nome": "feminino"
+//                 }
+//             ]
+
+const setAtualizarAtor = async(id, dadosBody, contentType) => {
     try {
         if(String(contentType).toLowerCase() == 'application/json'){
-            let idClassi = id
-            let classJSON = {}
-            if (idClassi == '' || idClassi == undefined || idClassi == null || isNaN(idClassi)){
+            let idAtor = id
+            let arrayNacs= dadosBody.nacionalidade
+            let atorJSON = {}
+            if (idAtor == '' || idAtor == undefined || idAtor == null || isNaN(idAtor)){
                 return message.ERROR_INVALID_ID
             }else{
-                if (dadosBody.faixa_etaria == null || dadosBody.faixa_etaria == undefined || dadosBody.faixa_etaria == '' || isNaN(dadosBody.faixa_etaria) || dadosBody.faixa_etaria.length > 3 ||
-                dadosBody.classificacao == null || dadosBody.classificacao == undefined || dadosBody.classificacao == '' || dadosBody.classificacao.length > 45 ||
-                dadosBody.caracteristica == null || dadosBody.caracteristica == undefined || dadosBody.caracteristica == '' || dadosBody.caracteristica.length > 200 ||
-                dadosBody.icone == null || dadosBody.icone == undefined || dadosBody.icone == '' || dadosBody.icone.length > 65000) {
+                if (dadosBody.nome == null || dadosBody.nome == undefined || dadosBody.nome == '' || dadosBody.nome.length > 100 ||
+                dadosBody.data_nascimento == null || dadosBody.data_nascimento == undefined || dadosBody.data_nascimento == '' || dadosBody.data_nascimento.length != 10 ||
+                // dadosBody.nacionalidade ==  null || dadosBody.nacionalidade == undefined || dadosBody.nacionalidade != Object ||
+                dadosBody.id_sexo == '' || dadosBody.id_sexo == undefined || dadosBody.id_sexo == null || isNaN(dadosBody.id_sexo)) {
                     return message.ERROR_INVALID_REQUIRED_FIELDS
                 } else {
-                    let verifyId = await classificacaoDAO.selectClassificacaoById(idClassi)
-
-                    if(verifyId){
-                        let exists = false
-                        dadosBody.id = idClassi
-                        
-                            classJSON.classificacao = dadosBody
-                            classJSON.staus = message.SUCCESS_UPDATED_ITEM.status
-                            classJSON.status_code = message.SUCCESS_UPDATED_ITEM.status_code
-                            classJSON.message = message.SUCCESS_UPDATED_ITEM.message
-
-                            return classJSON
-
+                    let validateStatus =  false
+                if(dadosBody.biografia != null || dadosBody.biografia != undefined || dadosBody.biografia != ''){
+                    if(dadosBody.biografia == null || dadosBody.biografia == undefined || dadosBody.biografia == '' || dadosBody.biografia.length > 655000 ){
+                        return message.ERROR_INVALID_REQUIRED_FIELDS
                     }else{
-                        return message.ERROR_NOT_FOUND
+                        validateStatus = true
+                    }
+                }else{
+                    validateStatus = true
+                }
+                    if (validateStatus) {
+                        let verifyId = await atorDAO.selectAtorById(idAtor)
+                        let lastId = await atorDAO.selectLastIdAtor()
+
+                        if(verifyId){
+                            dadosBody.id = idAtor
+                            let att = await atorDAO.updateAtor(idAtor, dadosBody)
+                            let getAtor = await atorDAO.selectAtorById(idAtor)
+                            if (att) {
+                                for (let index = 0; index < arrayNacs.length; index++) {
+                                    const elementN = arrayNacs[index];
+                                    let ator_ant = await nacionalidadeDAO.selectNacionalidadeByAtorU(idAtor)
+                                    if (ator_ant) {
+                                        console.log(ator_ant);
+                                        for (let index = 0; index < ator_ant.length; index++) {
+                                            const element = ator_ant[index];
+                                            let nacionalidade = await nacionalidadeDAO.updateAtorNacionalidade(element.id, idAtor, elementN)
+                                            console.log();
+                                            console.log(nacionalidade);
+                                        }
+                                    }else{
+                                        return message.ERROR_INTERNAL_SERVER_DB
+                                    }
+                                }
+                                let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(lastId[0].id)
+                                dadosBody.nacionalidade = nasci
+                                let sexo = await sexoDAO.selectSexoById(getAtor[0].id_sexo)
+                                dadosBody.id = lastId[0].id
+                                delete dadosBody.id_sexo
+                                dadosBody.sexo = sexo
+
+                                classificacaoJSON.classificacao = dadosBody
+                                classificacaoJSON.status = message.SUCCESS_CREATED_ITEM.status
+                                classificacaoJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
+                                classificacaoJSON.message = message.SUCCESS_CREATED_ITEM.message
+
+                                return classificacaoJSON
+                                } else {
+                                return message.ERROR_INTERNAL_SERVER_DB
+                            }
+
+                        }else{
+                            return message.ERROR_NOT_FOUND
+                        }
                     }
                 }
             }
@@ -200,7 +271,7 @@ const setDeletarClassificacao = async(id) => {
 module.exports={
     setInserirAtor,
     getListarAtores,
-    getBuscarClassificacao,
-    setAtualizarClassificacao,
+    getBuscarAtor,
+    setAtualizarAtor,
     setDeletarClassificacao
 }

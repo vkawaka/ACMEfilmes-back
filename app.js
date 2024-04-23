@@ -199,7 +199,11 @@ app.get('/v2/acmefilmes/ator', cors(), async function(request, response) {
     response.json(dadosAtor)
 })
 app.get('/v2/acmefilmes/ator/:id', cors(), async function(request, response) {
-    
+    let idP = request.params.id
+    let dados = await controllerAtor.getBuscarAtor(idP)
+
+    response.status(dados.status)
+    response.json(dados)
 })
 app.post('/v2/acmefilmes/ator', cors(), bodyParserJSON, async function(request, response) {
     let contentType = request.headers['content-type']
@@ -209,7 +213,13 @@ app.post('/v2/acmefilmes/ator', cors(), bodyParserJSON, async function(request, 
     response.json(newAtor)
 })
 app.put('/v2/acmefilmes/ator/:id', cors(), bodyParserJSON, async function(request, response) {
-    
+    let contentType = request.headers['content-type']
+    let idAtor = request.params.id
+    let dadosPUT = request.body
+
+    let resultUpdateAtor = await controllerAtor.setAtualizarAtor(idAtor, dadosPUT, contentType)
+    response.status(resultUpdateAtor.status_code)
+    response.json(resultUpdateAtor)
 })
 app.delete('/v2/acmefilmes/ator/:id', cors(), async function(request, response) {
     

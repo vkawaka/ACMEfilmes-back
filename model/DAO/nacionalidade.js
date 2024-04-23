@@ -29,7 +29,18 @@ const selectNacionalidadeByAtor = async(id) => {
         let sql = `SELECT tbl_nacionalidade.id, nome FROM tbl_nacionalidade JOIN tbl_ator_nacionalidade ON tbl_nacionalidade.id = tbl_ator_nacionalidade.id_nacionalidade WHERE id_ator = ${id}`
 
         let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
-        console.log(rsnacionalidade)
+        return rsnacionalidade
+        
+    } catch (error) {
+        return false
+    }
+}
+
+const selectNacionalidadeByAtorU = async(id_ator) => {
+    try {
+        let sql = `SELECT id FROM tbl_ator_nacionalidade WHERE id_ator = ${id_ator};`
+
+        let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
         return rsnacionalidade
         
     } catch (error) {
@@ -66,6 +77,22 @@ const insertAtorNacionalidade = async(id_ator, id_nacionalidade) => {
     }
 }
 
+const updateAtorNacionalidade = async(id, id_ator, id_nacionalidade) => {
+    try {
+        let sql = `UPDATE tbl_ator_nacionalidade SET id_ator = '${id_ator}', id_nacionalidade = '${id_nacionalidade}' WHERE tbl_ator_nacionalidade.id = ${id};`
+        console.log(sql);
+
+        let rsnacionalidade = await prisma.$executeRawUnsafe(sql)
+
+        if(rsnacionalidade)
+            return rsnacionalidade
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
 const insertDiretorNacionalidade = async(id_diretor, id_nacionalidade) => {
     try {
         let sql = `INSERT INTO tbl_diretor_nacionalidade (id_ator, id_nacionalidade) VALUES ('${id_diretor}', '${id_nacionalidade}')`
@@ -86,5 +113,7 @@ module.exports={
     selectNacionalidadeByAtor,
     selectNacionalidadeByDiretor,
     insertAtorNacionalidade,
-    insertDiretorNacionalidade
+    insertDiretorNacionalidade,
+    updateAtorNacionalidade,
+    selectNacionalidadeByAtorU
 }
