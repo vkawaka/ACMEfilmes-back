@@ -38,29 +38,30 @@ const selectAtorById = async(id) => {
 }
 
 const insertDiretor = async(dadosDiretor) => {
-try {
-    let sql 
-    if(dadosDiretor.biografia == '' || dadosDiretor.biografia == null || dadosDiretor.biografia == undefined){
-        sql = `INSERT INTO tbl_diretor (nome, data_nascimento, id_sexo) VALUES 
+    try {
+        let sql 
+        if(dadosDiretor.biografia == '' || dadosDiretor.biografia == null || dadosDiretor.biografia == undefined){
+            sql = `INSERT INTO tbl_diretor (nome, data_nascimento, id_sexo) VALUES 
+            ("${dadosDiretor.nome}", 
+            "${dadosDiretor.data_nascimento}",
+            "${dadosDiretor.id_sexo}");`
+        }else{
+        sql = `INSERT INTO tbl_diretor (nome, data_nascimento, biografia, id_sexo) VALUES 
         ("${dadosDiretor.nome}", 
         "${dadosDiretor.data_nascimento}",
+        "${dadosDiretor.biografia}",
         "${dadosDiretor.id_sexo}");`
-    }else{
-       sql = `INSERT INTO tbl_diretor (nome, data_nascimento, biografia, id_sexo) VALUES 
-       ("${dadosDiretor.nome}", 
-       "${dadosDiretor.data_nascimento}",
-       "${dadosDiretor.biografia}",
-       "${dadosDiretor.id_sexo}");`
-    }
-    let result = await prisma.$executeRawUnsafe(sql)
+        }
+        
+        let result = await prisma.$executeRawUnsafe(sql)
 
-    if(result)
-        return result
-    else
+        if(result)
+            return result
+        else
+            return false
+    } catch (error) {
         return false
-} catch (error) {
-    return false
-}
+    }
 }
 
 const updateAtor = async(id, dadosBody) => {
@@ -94,7 +95,7 @@ const deleteAtor = async(id) => {
     }
 }
 
-const selectLastIdAtor =  async() =>{
+const selectLastIdDiretor =  async() =>{
     try {
         let sql = `select cast(last_insert_id() AS DECIMAL) as id from tbl_ator limit 1`
 
@@ -108,10 +109,10 @@ const selectLastIdAtor =  async() =>{
 }
 
 module.exports={
-    selectAllAtores,
+    selectAllDiretores,
     selectAtorById,
-    insertAtor,
+    insertDiretor,
     updateAtor,
     deleteAtor,
-    selectLastIdAtor
+    selectLastIdDiretor
 }

@@ -29,7 +29,6 @@ const selectSexoById = async(id) => {
         let sql = `SELECT * FROM tbl_sexo WHERE id = ${id}`
 
         let rsgenero = await prisma.$queryRawUnsafe(sql)
-        console.log(rsgenero)
         return rsgenero
         
     } catch (error) {

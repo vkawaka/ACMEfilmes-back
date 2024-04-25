@@ -14,7 +14,7 @@
 
 
 //Import o arquivo DAO que fará a comunicação com o banco de dados.
-const atorDAO = require('../model/DAO/ator.js')
+const diretorDAO = require('../model/DAO/diretor.js')
 const nacionalidadeDAO = require('../model/DAO/nacionalidade.js')
 const sexoDAO = require('../model/DAO/sexo.js')
 
@@ -23,9 +23,9 @@ const sexoDAO = require('../model/DAO/sexo.js')
 //Import o arquivo config do projeto.
 const message = require('../module/config.js')
 
-const setInserirAtor = async(dadosBody, contentType) => {
+const setInserirDiretor = async(dadosBody, contentType) => {
     try {
-        let classificacaoJSON = {}
+        let diretorJSON = {}
         let arrayNacs = dadosBody.nacionalidade
         if(String(contentType).toLowerCase() == 'application/json'){
 
@@ -45,30 +45,31 @@ const setInserirAtor = async(dadosBody, contentType) => {
                 }else{
                     validateStatus = true
                 }
+
                 if(validateStatus){
-                    let newAtor = await atorDAO.insertAtor(dadosBody)
-                    let lastId = await atorDAO.selectLastIdAtor()
+                    let newDiretor = await diretorDAO.insertDiretor(dadosBody)
+                    let lastId = await diretorDAO.selectLastIdDiretor()
 
                    
-                    if(newAtor){
+                    if(newDiretor){
                         for (let index = 0; index < arrayNacs.length; index++) {
                             const element = arrayNacs[index];
-                            let nacionalidade = await nacionalidadeDAO.insertAtorNacionalidade(lastId[0].id, element)
-                            console.log(nacionalidade);
+                            await nacionalidadeDAO.insertDiretorNacionalidade(lastId[0].id, element)
                         }
-                        let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(lastId[0].id)
+                        let nasci = await nacionalidadeDAO.selectNacionalidadeByDiretor(lastId[0].id)
                         dadosBody.nacionalidade = nasci
+                        
                         let sexo = await sexoDAO.selectSexoById(dadosBody.id_sexo)
                         dadosBody.id = lastId[0].id
                         delete dadosBody.id_sexo
                         dadosBody.sexo = sexo
 
-                        classificacaoJSON.classificacao = dadosBody
-                        classificacaoJSON.status = message.SUCCESS_CREATED_ITEM.status
-                        classificacaoJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
-                        classificacaoJSON.message = message.SUCCESS_CREATED_ITEM.message
+                        diretorJSON.diretor = dadosBody
+                        diretorJSON.status = message.SUCCESS_CREATED_ITEM.status
+                        diretorJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
+                        diretorJSON.message = message.SUCCESS_CREATED_ITEM.message
 
-                        return classificacaoJSON
+                        return diretorJSON
 
                     }else{
                         return message.ERROR_INTERNAL_SERVER_DB
@@ -141,27 +142,6 @@ const getBuscarAtor = async(id) => {
         return message.ERROR_INTERNAL_SERVER
     }
 }
-
-// "nome": "teste 1",
-//             "data_nascimento": "2024-04-18T00:00:00.000Z",
-//             "biografia": "nascer reproduzir e morrer",
-//             "nacionalidade": [
-//                 {
-//                     "id": 5,
-//                     "nome": "Brasil"
-//                 },
-//                 {
-//                     "id": 13,
-//                     "nome": "França"
-//                 }
-//             ],
-//             "sexo": [
-//                 {
-//                     "id": 1,
-//                     "sigla": "F",
-//                     "nome": "feminino"
-//                 }
-//             ]
 
 const setAtualizarAtor = async(id, dadosBody, contentType) => {
     try {
@@ -263,7 +243,7 @@ const setDeletarAtor = async(id) => {
 }
 
 module.exports={
-    setInserirAtor,
+    setInserirDiretor,
     getListarAtores,
     getBuscarAtor,
     setAtualizarAtor,

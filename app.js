@@ -28,6 +28,9 @@ app.use((request, response, next) =>{
  const controllerClassificacao = require('./controller/controller_classificacao.js')
 
  const controllerAtor = require('./controller/controller_ator.js')
+
+ const controllerDiretor = require('./controller/controller_diretor.js')
+
   
  
  /******************************************************************************************************/
@@ -228,6 +231,27 @@ app.delete('/v2/acmefilmes/ator/:id', cors(), async function(request, response) 
     response.status(dadosAtor.status_code)
     response.json(dadosAtor)
 })
+
+app.get('/v2/acmefilmes/diretor', cors(), async function(request, response) {
+    
+})
+app.get('/v2/acmefilmes/diretor/:id', cors(), async function(request, response) {
+    
+})
+app.post('/v2/acmefilmes/diretor', cors(), bodyParserJSON, async function(request, response) {
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+    let newDiretor = await controllerDiretor.setInserirDiretor(dadosBody, contentType)
+    response.status(newDiretor.status_code)
+    response.json(newDiretor)
+})
+app.put('/v2/acmefilmes/diretor/:id', cors(), bodyParserJSON, async function(request, response) {
+    
+})
+app.delete('/v2/acmefilmes/diretor/:id', cors(), async function(request, response) {
+    
+})
+
 
 // app.get('/v2/acmefilmes/ator', cors(), async function(request, response) {
     
