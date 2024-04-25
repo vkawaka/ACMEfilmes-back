@@ -163,8 +163,9 @@ app.get('/v2/acmefilmes/classificacao', cors(), async function(request, response
 app.get('/v2/acmefilmes/classificacao/:id', cors(), async function(request, response){
     let id = request.params.id
     let dados = await controllerClassificacao.getBuscarClassificacao(id)
+    console.log(dados);
 
-    response.status(dados.status)
+    response.status(dados.status_code)
     response.json(dados)
 })
 app.post('/v2/acmefilmes/classificacao', cors(), bodyParserJSON, async function(request, response){
@@ -222,7 +223,10 @@ app.put('/v2/acmefilmes/ator/:id', cors(), bodyParserJSON, async function(reques
     response.json(resultUpdateAtor)
 })
 app.delete('/v2/acmefilmes/ator/:id', cors(), async function(request, response) {
-    
+    let idAtor = request.params.id
+    let dadosAtor = await controllerAtor.setDeletarAtor(idAtor)
+    response.status(dadosAtor.status_code)
+    response.json(dadosAtor)
 })
 
 // app.get('/v2/acmefilmes/ator', cors(), async function(request, response) {

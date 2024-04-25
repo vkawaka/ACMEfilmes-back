@@ -78,11 +78,16 @@ const getBuscarClassificacao = async(id) => {
             let classiJSON = {}
 
             let dadoClassi = await classificacaoDAO.selectClassificacaoById(idClassificacao)
+            console.log(dadoClassi)
             if(dadoClassi){
+                if (dadoClassi.length > 0) {
                 classiJSON.classificacao = dadoClassi
-                classiJSON.status = 200
+                classiJSON.status_code = 200
 
                 return classiJSON
+                } else {
+                    return message.ERROR_NOT_FOUND
+                }
             }else{
                 return message.ERROR_INTERNAL_SERVER_DB
             }

@@ -48,6 +48,20 @@ const selectNacionalidadeByAtorU = async(id_ator) => {
     }
 }
 
+const selectNacionalidadeAtorId = async(id) => {
+    try {
+        let sql = `SELECT * FROM tbl_ator_nacionalidade WHERE id = ${id};`
+
+        let rs = await prisma.$queryRawUnsafe(sql)
+        if(rs)
+            return rs
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
 const selectNacionalidadeByDiretor = async(id) => {
     try {
         let sql = `SELECT tbl_diretor_nacionalidade.id, nome FROM tbl_diretor_nacionalidade JOIN tbl_nacionalidade ON tbl_diretor_nacionalidade.id = tbl_nacionalidade.id WHERE id_diretor = ${id}`
@@ -115,5 +129,6 @@ module.exports={
     insertAtorNacionalidade,
     insertDiretorNacionalidade,
     updateAtorNacionalidade,
-    selectNacionalidadeByAtorU
+    selectNacionalidadeByAtorU,
+    selectNacionalidadeAtorId
 }
