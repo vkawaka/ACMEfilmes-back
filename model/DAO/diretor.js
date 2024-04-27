@@ -13,20 +13,24 @@ const prisma = new PrismaClient()
 
 const selectAllDiretores = async() =>{
     try {
-        let sql = `SELECT * FROM tbl_ator`
+        let sql = `SELECT * FROM tbl_diretor`
 
-        let rsator = await prisma.$queryRawUnsafe(sql)
-        console.log(rsator)
-        return rsator
+        let rsdiretor = await prisma.$queryRawUnsafe(sql)
+
+        if (rsdiretor) {
+            return rsdiretor
+        } else {
+            return false
+        }
         
     } catch (error) {
         return false
     }
 }
 
-const selectAtorById = async(id) => {
+const selectDiretorById = async(id) => {
     try{
-        let sql = `select * from tbl_ator where tbl_ator.id = ${id}`
+        let sql = `select * from tbl_diretor where tbl_diretor.id = ${id}`
     
         let rsatorId = await prisma.$queryRawUnsafe(sql)
     
@@ -52,7 +56,7 @@ const insertDiretor = async(dadosDiretor) => {
         "${dadosDiretor.biografia}",
         "${dadosDiretor.id_sexo}");`
         }
-        
+        console.log(sql);
         let result = await prisma.$executeRawUnsafe(sql)
 
         if(result)
@@ -64,18 +68,18 @@ const insertDiretor = async(dadosDiretor) => {
     }
 }
 
-const updateAtor = async(id, dadosBody) => {
+const updateDiretor = async(id, dadosBody) => {
     try {
         let sql
         if(dadosBody.biografia != '' && dadosBody.biografia != null && dadosBody.biografia != undefined){
-            sql = `UPDATE tbl_ator SET nome = '${dadosBody.nome}', data_nascimento = '${dadosBody.data_nascimento}', id_sexo = '${dadosBody.id_sexo}' WHERE tbl_ator.id = ${id};`
+            sql = `UPDATE tbl_diretor SET nome = '${dadosBody.nome}', data_nascimento = '${dadosBody.data_nascimento}', id_sexo = '${dadosBody.id_sexo}' WHERE tbl_diretor.id = ${id};`
         }else{
-           sql = `UPDATE tbl_ator SET nome = '${dadosBody.nome}', data_nascimento = '${dadosBody.data_nascimento}', biografia = ${dadosBody.biografia}, id_sexo = ${dadosBody.id_sexo} WHERE tbl_ator.id = ${id};`
+           sql = `UPDATE tbl_diretor SET nome = '${dadosBody.nome}', data_nascimento = '${dadosBody.data_nascimento}', biografia = ${dadosBody.biografia}, id_sexo = ${dadosBody.id_sexo} WHERE tbl_diretor.id = ${id};`
         }
-        let rsupdateator = await prisma.$queryRawUnsafe(sql)
+        let rsupdatediretor = await prisma.$queryRawUnsafe(sql)
 
-        if(rsupdateator)
-            return rsupdateator
+        if(rsupdatediretor)
+            return rsupdatediretor
         else
             return false
 
@@ -84,12 +88,12 @@ const updateAtor = async(id, dadosBody) => {
     }
 }
 
-const deleteAtor = async(id) => {
+const deleteDiretor = async(id) => {
     try {
-        let sql = `DELETE FROM tbl_ator WHERE tbl_ator.id = ${id}`
+        let sql = `DELETE FROM tbl_diretor WHERE tbl_diretor.id = ${id}`
 
-        let rsdeletedAtor = prisma.$queryRawUnsafe(sql)
-        return rsdeletedAtor
+        let rsdeletedDiretor = prisma.$queryRawUnsafe(sql)
+        return rsdeletedDiretor
     } catch (error) {
         return false
     }
@@ -110,9 +114,9 @@ const selectLastIdDiretor =  async() =>{
 
 module.exports={
     selectAllDiretores,
-    selectAtorById,
+    selectDiretorById,
     insertDiretor,
-    updateAtor,
-    deleteAtor,
+    updateDiretor,
+    deleteDiretor,
     selectLastIdDiretor
 }

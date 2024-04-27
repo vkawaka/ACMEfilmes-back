@@ -142,26 +142,6 @@ const getBuscarAtor = async(id) => {
     }
 }
 
-// "nome": "teste 1",
-//             "data_nascimento": "2024-04-18T00:00:00.000Z",
-//             "biografia": "nascer reproduzir e morrer",
-//             "nacionalidade": [
-//                 {
-//                     "id": 5,
-//                     "nome": "Brasil"
-//                 },
-//                 {
-//                     "id": 13,
-//                     "nome": "França"
-//                 }
-//             ],
-//             "sexo": [
-//                 {
-//                     "id": 1,
-//                     "sigla": "F",
-//                     "nome": "feminino"
-//                 }
-//             ]
 
 const setAtualizarAtor = async(id, dadosBody, contentType) => {
     try {
@@ -244,9 +224,11 @@ const setDeletarAtor = async(id) => {
             return message.ERROR_INVALID_ID
         }else{
             let idVerify = await atorDAO.selectAtorById(idAtor)
-
+            console.log(idVerify);
             if(idVerify.length > 0){
+                await nacionalidadeDAO.deleteNacionalidadeByAtor(idAtor)
                 let deletado = await atorDAO.deleteAtor(idAtor)
+
      
                 if(deletado){
                     return message.SUCCESS_DELETED_ITEM

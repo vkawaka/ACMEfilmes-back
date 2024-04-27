@@ -63,12 +63,25 @@ null,
 );
 
 -- -----------------------------------------------------
+-- Table `db_acme_filmes_turma_bb`.`tbl_sexo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_sexo` (
+  id INT NOT NULL AUTO_INCREMENT,
+  sigla VARCHAR(1) NOT NULL,
+  nome VARCHAR(15) NOT NULL,
+  PRIMARY KEY (`id`)
+  );
+INSERT INTO `tbl_sexo`(`sigla`,`nome`) VALUES
+('F', 'feminino'),
+('M', 'masculino');
+
+-- -----------------------------------------------------
 -- Table `db_acme_filmes_turma_bb`.`tbl_ator`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_ator` (
   id INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(100) NOT NULL,
-  data_nascimento DATE NULL,
+  data_nascimento DATE NOT NULL,
   biografia TEXT NULL,
   id_sexo INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -80,7 +93,7 @@ REFERENCES `db_acme_filmes_turma_bb`.`tbl_sexo` (`id`)
   
   INSERT INTO tbl_ator (nome, data_nascimento, biografia, id_sexo) VALUES 
        ("teste",
-       "undefined",
+       "2024",
        "nasceu e pa ne",
        "1");
   
@@ -110,7 +123,7 @@ REFERENCES `db_acme_filmes_turma_bb`.`tbl_sexo` (`id`)
 CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_genero` (
   id INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(45) NOT NULL,
-  descricao VARCHAR(100) NULL,
+  descricao VARCHAR(255) NULL,
   PRIMARY KEY (`id`)
   );
 
@@ -225,19 +238,6 @@ INSERT INTO `tbl_nacionalidade`(`nome`) VALUES
 ('Turquia');
 
 select * from tbl_nacionalidade;
-
--- -----------------------------------------------------
--- Table `db_acme_filmes_turma_bb`.`tbl_sexo`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_acme_filmes_turma_bb`.`tbl_sexo` (
-  id INT NOT NULL AUTO_INCREMENT,
-  sigla VARCHAR(1) NOT NULL,
-  nome VARCHAR(15) NOT NULL,
-  PRIMARY KEY (`id`)
-  );
-INSERT INTO `tbl_sexo`(`sigla`,`nome`) VALUES
-('F', 'feminino'),
-('M', 'masculino');
 
 -- -----------------------------------------------------
 -- Table `db_acme_filmes_turma_bb`.`tbl_ator_nacionalidade`

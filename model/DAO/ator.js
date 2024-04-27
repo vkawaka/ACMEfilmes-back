@@ -88,7 +88,13 @@ const deleteAtor = async(id) => {
         let sql = `DELETE FROM tbl_ator WHERE tbl_ator.id = ${id}`
 
         let rsdeletedAtor = prisma.$queryRawUnsafe(sql)
-        return rsdeletedAtor
+
+        if (rsdeletedAtor) {
+            return rsdeletedAtor
+
+        } else {
+            return false            
+        }
     } catch (error) {
         return false
     }

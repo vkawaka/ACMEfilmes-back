@@ -77,6 +77,24 @@ const updateAtorNacionalidade = async(id, id_ator, id_nacionalidade) => {
     }
 }
 
+
+const deleteNacionalidadeByAtor = async(id_ator) => {
+    try {
+        let sql = `DELETE FROM tbl_ator_nacionalidade WHERE id_ator = ${id_ator}`
+
+
+        let rs = await prisma.$queryRawUnsafe(sql)
+
+
+        if(rs)
+            return rs
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
 const selectNacionalidadeByDiretor = async(id) => {
     try {
         console.log(id);
@@ -112,6 +130,8 @@ const insertDiretorNacionalidade = async(id_diretor, id_nacionalidade) => {
     try {
         let sql = `INSERT INTO tbl_diretor_nacionalidade (id_diretor, id_nacionalidade) VALUES ('${id_diretor}', '${id_nacionalidade}')`
 
+        console.log(sql);
+
         let rsnacionalidade = await prisma.$executeRawUnsafe(sql)
 
         if(rsnacionalidade)
@@ -125,7 +145,7 @@ const insertDiretorNacionalidade = async(id_diretor, id_nacionalidade) => {
 
 const selectNacionalidadeByDiretorU = async(id_diretor) => {
     try {
-        let sql = `SELECT id FROM tbl_ator_nacionalidade WHERE id_ator = ${id_diretor};`
+        let sql = `SELECT id FROM tbl_diretor_nacionalidade WHERE id_diretor = ${id_diretor};`
 
         let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
         return rsnacionalidade
@@ -151,7 +171,7 @@ const selectNacionalidadeDiretorId = async(id) => {
 
 const updateDiretorNacionalidade = async(id, id_diretor, id_nacionalidade) => {
     try {
-        let sql = `UPDATE tbl_ator_nacionalidade SET id_diretor = '${id_diretor}', id_nacionalidade = '${id_nacionalidade}' WHERE tbl_ator_nacionalidade.id = ${id};`
+        let sql = `UPDATE tbl_diretor_nacionalidade SET id_diretor = '${id_diretor}', id_nacionalidade = '${id_nacionalidade}' WHERE tbl_diretor_nacionalidade.id = ${id};`
         console.log(sql);
 
         let rsnacionalidade = await prisma.$executeRawUnsafe(sql)
@@ -164,7 +184,40 @@ const updateDiretorNacionalidade = async(id, id_diretor, id_nacionalidade) => {
         return false
     }
 }
+const deleteNacionalidadeByDiretor = async(id_diretor) => {
+    try {
+        let sql = `DELETE FROM tbl_diretor_nacionalidade WHERE id_diretor = ${id_diretor}`
 
+
+        let rs = await prisma.$queryRawUnsafe(sql)
+
+
+        if(rs)
+            return rs
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+const deleteNacionalidadeDiretor = async(id) => {
+    try {
+        let sql = `DELETE FROM tbl_diretor_nacionalidade WHERE id = ${id}`
+        console.log("teste " + sql);
+
+
+        let rs = await prisma.$queryRawUnsafe(sql)
+        console.log(sql);
+
+
+        if(rs)
+            return rs
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
 
 module.exports={
     selectAllNacionalidades,
@@ -177,5 +230,8 @@ module.exports={
     selectNacionalidadeAtorId,
     selectNacionalidadeByDiretorU,
     selectNacionalidadeDiretorId,
-    updateDiretorNacionalidade
+    updateDiretorNacionalidade,
+    deleteNacionalidadeByAtor,
+    deleteNacionalidadeByDiretor,
+    deleteNacionalidadeDiretor
 }
