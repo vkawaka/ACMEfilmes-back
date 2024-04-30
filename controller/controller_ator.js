@@ -25,7 +25,7 @@ const message = require('../module/config.js')
 
 const setInserirAtor = async(dadosBody, contentType) => {
     try {
-        let classificacaoJSON = {}
+        let atorJSON = {}
         let arrayNacs = dadosBody.nacionalidade
         if(String(contentType).toLowerCase() == 'application/json'){
 
@@ -63,12 +63,12 @@ const setInserirAtor = async(dadosBody, contentType) => {
                         delete dadosBody.id_sexo
                         dadosBody.sexo = sexo
 
-                        classificacaoJSON.classificacao = dadosBody
-                        classificacaoJSON.status = message.SUCCESS_CREATED_ITEM.status
-                        classificacaoJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
-                        classificacaoJSON.message = message.SUCCESS_CREATED_ITEM.message
+                        atorJSON.ator = dadosBody
+                        atorJSON.status = message.SUCCESS_CREATED_ITEM.status
+                        atorJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
+                        atorJSON.message = message.SUCCESS_CREATED_ITEM.message
 
-                        return classificacaoJSON
+                        return atorJSON
 
                     }else{
                         return message.ERROR_INTERNAL_SERVER_DB
@@ -85,7 +85,7 @@ const setInserirAtor = async(dadosBody, contentType) => {
 }
 const getListarAtores = async() => {
     try {
-        let classificacaoJSON = {}
+        let atorJSON = {}
 
         let dadosAtor = await atorDAO.selectAllAtores()
         if(dadosAtor){
@@ -97,11 +97,11 @@ const getListarAtores = async() => {
                 delete element.id_sexo
                 element.sexo = sexo
             }
-                classificacaoJSON.classificacao = dadosAtor
-                classificacaoJSON.status = message.SUCCESS_CREATED_ITEM.status
-                classificacaoJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
+            atorJSON.ator = dadosAtor
+            atorJSON.status = message.SUCCESS_CREATED_ITEM.status
+            atorJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
 
-                return classificacaoJSON
+                return atorJSON
 
         }else{
             return message.ERROR_INTERNAL_SERVER_DB

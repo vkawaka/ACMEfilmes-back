@@ -31,7 +31,9 @@ app.use((request, response, next) =>{
 
  const controllerDiretor = require('./controller/controller_diretor.js')
 
-  
+ const controllerAdm = require('./controller/controller_adm.js')
+
+ const controllerUsuario = require('./controller/controller_usuario.js')
  
  /******************************************************************************************************/
 
@@ -269,6 +271,70 @@ app.delete('/v2/acmefilmes/diretor/:id', cors(), async function(request, respons
     response.status(dadosAtor.status_code)
     response.json(dadosAtor)
 })
+
+/*******************************************************************************************************************************************************************************************/
+
+app.get('/v2/acmefilmes/adm', cors(), async function(request, response) {
+    let dadosAdm = await controllerAdm.getListarAdm()
+    response.status(dadosAdm.status_code)
+    response.json(dadosAdm)  
+})
+app.get('/v2/acmefilmes/adm/:id', cors(), async function(request, response) {
+    let id = request.params.id
+    let dado = await controllerAdm.getBuscarAdm(id)
+    response.status(dado.status_code)
+    response.json(dado)
+})
+app.post('/v2/acmefilmes/adm', cors(), bodyParserJSON, async function(request, response) {
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+    let newAdm = await controllerAdm.setInserirNovoAdm(dadosBody, contentType)
+    response.status(newAdm.status_code)
+    response.json(newAdm)     
+})
+app.put('/v2/acmefilmes/adm/:id', cors(), bodyParserJSON, async function(request, response) {
+    let contentType = request.headers['content-type']
+    let idAdm = request.params.id
+    let dadosPUT = request.body
+
+    let resultUpdateAdm = await controllerAdm.setAtualizarAdm(idAdm, dadosPUT, contentType)
+    response.status(resultUpdateAdm.status_code)
+    response.json(resultUpdateAdm)
+})
+app.delete('/v2/acmefilmes/adm/:id', cors(), async function(request, response) {
+    let id = request.params.id
+    let dados = await controllerAdm.setExcluirAdm(id)
+    response.status(dados.status_code)
+    response.json(dados)  
+})
+
+
+/*************************************************************************************************************************** */
+
+
+
+app.get('/v2/acmefilmes/usuario', cors(), async function(request, response) {
+    let dadosUsuario = await controllerUsuario.getListarUsuario()
+    response.status(dadosUsuario.status_code)
+    response.json(dadosUsuario)  
+})
+app.get('/v2/acmefilmes/usuario/:id', cors(), async function(request, response) {
+    
+})
+app.post('/v2/acmefilmes/usuario', cors(), bodyParserJSON, async function(request, response) {
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+    let newUsuario = await controllerUsuario.setInserirNovoUsuario(dadosBody, contentType)
+    response.status(newUsuario.status_code)
+    response.json(newUsuario)   
+})
+app.put('/v2/acmefilmes/usuario', cors(), bodyParserJSON, async function(request, response) {
+    
+})
+app.delete('/v2/acmefilmes/usuario/:id', cors(), async function(request, response) {
+    
+})
+
 
 
 // app.get('/v2/acmefilmes/ator', cors(), async function(request, response) {
