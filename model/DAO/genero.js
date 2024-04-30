@@ -92,13 +92,41 @@ const selectLastIdGenero =  async() =>{
         return false
     }
 }
-const insertFilmeGenero = async(id_filme, id_ator) => {
+const insertFilmeGenero = async(id_filme, id_genero) => {
     try {
-        let sql = `INSERT INTO tbl_filme_ator (id_filme, id_ator) VALUES ('${id_filme}', '${id_ator}')`
+        let sql = `INSERT INTO tbl_filme_genero (id_filme, id_genero) VALUES ('${id_filme}', '${id_genero}')`
+
+        let rs = await prisma.$queryRawUnsafe(sql)
+
+        if(rs)
+            return rs
+        else
+            return false
+
+    } catch (error) {
+        return false
+    }
+}
+const selectGeneroByFilme = async(id) => {
+    try {
+        let sql = `SELECT tbl_genero.id, nome FROM tbl_genero JOIN tbl_filme_genero ON tbl_genero.id = tbl_filme_genero.id_genero WHERE id_filme = ${id}`
         console.log(sql);
 
-        let rs = await prisma.$executeRawUnsafe(sql)
+        let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
+        return rsnacionalidade
+        
+    } catch (error) {
+        return false
+    }
+}
+const deleteFilmeGenero = async(id) => {
+    try {
+        let sql = `DELETE FROM tbl_filme_genero WHERE id_filme = ${id}`
+        console.log("teste " + sql);
 
+
+        let rs = await prisma.$queryRawUnsafe(sql)
+        console.log(sql);
         if(rs)
             return rs
         else
@@ -114,5 +142,8 @@ module.exports={
     insertGenero,
     updateGenero,
     deleteGenero,
-    selectLastIdGenero
+    selectLastIdGenero,
+    insertFilmeGenero,
+    selectGeneroByFilme,
+    deleteFilmeGenero
 }

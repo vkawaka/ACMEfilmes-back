@@ -347,7 +347,38 @@ app.delete('/v2/acmefilmes/usuario/:id', cors(), async function(request, respons
     response.json(dados)  
 })
 
+app.post('/v2/acmefilmes/usuario/fav/:idU/:idF', cors(), async function(request, response) {
+    let idUsuario = request.params.idU
+    let idFilme = request.params.idF    
 
+    let resultUpdate = await controllerUsuario.insertFilmeFav(idUsuario, idFilme)
+    response.status(resultUpdate.status_code)
+    response.json(resultUpdate)
+})
+app.post('/v2/acmefilmes/usuario/assitido/:idU/:idF', cors(), async function(request, response) {
+    let idUsuario = request.params.idU
+    let idFilme = request.params.idF    
+
+    let resultUpdate = await controllerUsuario.insertFilmeAssistido(idUsuario, idFilme)
+    response.status(resultUpdate.status_code)
+    response.json(resultUpdate)
+})
+app.delete('/v2/acmefilmes/usuario/fav/:idU/:idF', cors(), async function(request, response) {
+    let idUsuario = request.params.idU
+    let idFilme = request.params.idF 
+
+    let dados = await controllerUsuario.setExcluirFav(idUsuario, idFilme)
+    response.status(dados.status_code)
+    response.json(dados)  
+})
+app.delete('/v2/acmefilmes/usuario/assistido/:idU/:idF', cors(), async function(request, response) {
+    let idUsuario = request.params.idU
+    let idFilme = request.params.idF 
+
+    let dados = await controllerUsuario.setExcluirAssistido(idUsuario, idFilme)
+    response.status(dados.status_code)
+    response.json(dados)  
+})
 
 // app.get('/v2/acmefilmes/ator', cors(), async function(request, response) {
     

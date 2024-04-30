@@ -97,11 +97,12 @@ const selectLastId = async() => {
     }
 }
 
+
 module.exports={
     insertClassificacao,
     selectAllClassificacao,
     selectClassificacaoById,
     deleteClassificacao,
     updateClassificacao,
-    selectLastId
+    selectLastId,
 }

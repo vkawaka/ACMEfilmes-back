@@ -128,6 +128,35 @@ const insertFilmeAtor = async(id_filme, id_ator) => {
         return false
     }
 }
+const selectAtorByFilme = async(id) => {
+    try {
+        let sql = `SELECT tbl_ator.id, nome FROM tbl_ator JOIN tbl_filme_ator ON tbl_ator.id = tbl_filme_ator.id_ator WHERE id_filme = ${id}`
+
+        let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
+        return rsnacionalidade
+        
+    } catch (error) {
+        return false
+    }
+}
+const deleteFilmeAtor = async(id) => {
+    try {
+        let sql = `DELETE FROM tbl_filme_ator WHERE id_filme = ${id}`
+        console.log("teste " + sql);
+
+
+        let rs = await prisma.$queryRawUnsafe(sql)
+        console.log(sql);
+
+
+        if(rs)
+            return rs
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
 
 module.exports={
     selectAllAtores,
@@ -136,5 +165,7 @@ module.exports={
     updateAtor,
     deleteAtor,
     selectLastIdAtor,
-    insertFilmeAtor
+    insertFilmeAtor,
+    selectAtorByFilme,
+    deleteFilmeAtor
 }

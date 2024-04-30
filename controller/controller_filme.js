@@ -12,7 +12,8 @@ const filmeDAO = require('../model/DAO/filme.js')
 const atorDAO = require('../model/DAO/ator.js')
 const diretorDAO = require('../model/DAO/diretor.js')
 const generoDAO = require('../model/DAO/genero.js')
-const classificacao = require('../model/DAO/classificacao.js')
+const classificacaoDAO = require('../model/DAO/classificacao.js')
+const usuarioDAO = require('../model/DAO/usuario.js')
 
 //Import o arquivo config do projeto.
 const message = require('../module/config.js')
@@ -62,33 +63,33 @@ const setInserirNovoFilme = async(dadosFilme, contentType) => {
                         let idFilme = idDAO[0].id
                         console.log(idFilme)
                         
-                        for (let index = 0; index < atorArray.length; index++) {
-                            const element = atorArray[index];
-                            let ator = await atorDAO.insertFilmeAtor(idFilme, element)
-                            console.log(ator);
+                        for (let index = 0; index < generoArray.length; index++) {
+                            const element = generoArray[index];
+                            await generoDAO.insertFilmeGenero(idFilme, element)
                         }
 
                         for (let index = 0; index < atorArray.length; index++) {
                             const element = atorArray[index];
-                            let ator = await atorDAO.insertFilmeAtor(idFilme, element)
-                            console.log(ator);
+                            await atorDAO.insertFilmeAtor(idFilme, element)
                         }
 
-                        for (let index = 0; index < atorArray.length; index++) {
-                            const element = atorArray[index];
-                            let ator = await atorDAO.insertFilmeAtor(idFilme, element)
-                            console.log(ator);
+                        for (let index = 0; index < diretorArray.length; index++) {
+                            const element = diretorArray[index];
+                            await diretorDAO.insertFilmeDiretor(idFilme, element)
                         }
 
+                        let gen = await generoDAO.selectGeneroByFilme(idFilme)
+                        console.log(gen);
+                        dadosFilme.genero = gen
+                        let ator = await atorDAO.selectAtorByFilme(idFilme)
+                        dadosFilme.ator = ator
+                        let diretor = await diretorDAO.selectDiretorByFilme(idFilme)
+                        dadosFilme.diretor = diretor
+                        dadosFilme.favorito = fav
 
-                        let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor([0].id)
-                        dadosBody.nacionalidade = nasci
-                        let sexo = await sexoDAO.selectSexoById(dadosBody.id_sexo)
-                        dadosBody.id = lastId[0].id
-                        delete dadosBody.id_sexo
-                        dadosBody.sexo = sexo
-
-                        
+                        let classi = await classificacaoDAO.selectClassificacaoById(dadosFilme.id_classificacao)
+                        delete dadosFilme.id_classificacao
+                        dadosFilme.classificacao = classi
                         dadosFilme.id = idDAO[0].id
 
                         novoFilmeJSON.filme = dadosFilme
@@ -119,6 +120,9 @@ const setAtualizarFilme = async(id, dadosFilme, contentType) => {
         
     if(String(contentType).toLowerCase() == 'application/json'){
         let novoFilmeJSON = {}
+        let atorArray = dadosFilme.ator
+        let diretorArray = dadosFilme.diretor
+        let generoArray = dadosFilme.genero
 
         let idFilme = id
         if(idFilme == '' || idFilme == undefined || isNaN(idFilme)){
@@ -162,6 +166,39 @@ const setAtualizarFilme = async(id, dadosFilme, contentType) => {
 
                         //Validação para verificar se o DAO inseriu os dados no BD.
                         if(novoFilme){
+                            await generoDAO.deleteFilmeGenero(idFilme)
+                            await atorDAO.deleteFilmeAtor(idFilme)
+                            await diretorDAO.deleteFilmeDiretor(idFilme)
+
+
+                            for (let index = 0; index < generoArray.length; index++) {
+                                const element = generoArray[index];
+                                await generoDAO.insertFilmeGenero(idFilme, element)
+                            }
+    
+                            for (let index = 0; index < atorArray.length; index++) {
+                                const element = atorArray[index];
+                                await atorDAO.insertFilmeAtor(idFilme, element)
+                            }
+    
+                            for (let index = 0; index < diretorArray.length; index++) {
+                                const element = diretorArray[index];
+                                await diretorDAO.insertFilmeDiretor(idFilme, element)
+                            }
+    
+    
+                            let gen = await generoDAO.selectGeneroByFilme(idFilme)
+                            dadosFilme.genero = gen
+                            let ator = await atorDAO.selectAtorByFilme(idFilme)
+                            dadosFilme.ator = ator
+                            let diretor = await diretorDAO.selectDiretorByFilme(idFilme)
+                            dadosFilme.diretor = diretor
+    
+                            let classi = await classificacaoDAO.selectClassificacaoById(dadosFilme.id_classificacao)
+                            delete dadosFilme.id_classificacao
+                            dadosFilme.classificacao = classi    
+
+
                             novoFilmeJSON.filme = dadosFilme
                             novoFilmeJSON.status = message.SUCCESS_UPDATED_ITEM.status
                             novoFilmeJSON.status_code = message.SUCCESS_UPDATED_ITEM.status_code
@@ -223,6 +260,21 @@ const getListarFilmes = async() => {
     if(dadosFilmes){
 
         if(dadosFilmes.length > 0 ){
+            for (let index = 0; index < dadosFilmes.length; index++) {
+                const element = dadosFilmes[index];
+                let gen = await generoDAO.selectGeneroByFilme(element.id)
+                console.log(gen);
+                element.genero = gen
+                let ator = await atorDAO.selectAtorByFilme(element.id)
+                element.ator = ator
+                let diretor = await diretorDAO.selectDiretorByFilme(element.id)
+                element.diretor = diretor
+
+                let classi = await classificacaoDAO.selectClassificacaoById(element.id_classificacao)
+                delete element.id_classificacao
+                element.classificacao = classi
+            }
+
              //Cria o JSON para devolver para o app
             filmesJSON.filmes = dadosFilmes
             filmesJSON.quantidade = dadosFilmes.length
@@ -253,6 +305,38 @@ const getBuscarFilmeNome = async(filmeNome) => {
         if(dadosFilmes){
 
             if(dadosFilmes.length > 0 ){
+                if(dadosFilmes.length > 0 ){
+                    for (let index = 0; index < dadosFilmes.length; index++) {
+                        const element = dadosFilmes[index];
+                        let gen = await generoDAO.selectGeneroByFilme(element.id)
+                        console.log(gen);
+                        element.genero = gen
+                        let ator = await atorDAO.selectAtorByFilme(element.id)
+                        element.ator = ator
+                        let diretor = await diretorDAO.selectDiretorByFilme(element.id)
+                        element.diretor = diretor
+        
+                        let classi = await classificacaoDAO.selectClassificacaoById(element.id_classificacao)
+                        delete element.id_classificacao
+                        element.classificacao = classi
+
+                        let select = await usuarioDAO.selectFilmeFav(idFilme, element.id_usuario)
+                        console.log(select);
+                        let fav = false
+                        if(select)
+                            fav = true
+                        else
+                            fav = false
+
+                        let assisti = await usuarioDAO.selectFilmeFav(element.id, element.id_usuario)
+                        console.log(select);
+                        let assistido = false
+                        if(assisti)
+                            assistido = true
+                        else
+                            assistido = false
+                    }
+
                  //Cria o JSON para devolver para o app
                 filmesJSON.filme = dadosFilmes
                 filmesJSON.status_code = 200
@@ -266,7 +350,7 @@ const getBuscarFilmeNome = async(filmeNome) => {
             return message.ERROR_INTERNAL_SERVER_DB //500
         }
     }
-
+}
 }
 
 //função para buscar um filmes pelo Id.
@@ -289,6 +373,18 @@ const getBuscarFilme = async(id) => {
 
             //Validação para verificar a quantidade de itens encontrados
             if(dadosFilme.length > 0){
+                let element = dadosFilme[0]
+                let gen = await generoDAO.selectGeneroByFilme(element.id)
+                        console.log(gen);
+                        element.genero = gen
+                        let ator = await atorDAO.selectAtorByFilme(element.id)
+                        element.ator = ator
+                        let diretor = await diretorDAO.selectDiretorByFilme(element.id)
+                        element.diretor = diretor
+        
+                        let classi = await classificacaoDAO.selectClassificacaoById(element.id_classificacao)
+                        delete element.id_classificacao
+                        element.classificacao = classi
                 //Cria o JSON para retorno
                 filmeJSON.filme = dadosFilme
                 filmeJSON.status_code = 200
@@ -312,3 +408,4 @@ module.exports={
     getBuscarFilme,
     getBuscarFilmeNome
 }
+

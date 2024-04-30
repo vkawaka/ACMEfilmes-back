@@ -109,6 +109,114 @@ const selectLastId =  async() =>{
         return false
     }
 }
+const insertFav = async(idUsuario, idFilme)=>{
+    try {
+        let sql = `INSERT INTO tbl_usuario_filme_fav (id_usuario, id_filme) VALUES ('${idUsuario}', '${idFilme}')`
+        console.log(sql);
+
+        let rs = await prisma.$executeRawUnsafe(sql)
+
+        if(rs)
+            return rs
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+const selectFilmesFav = async(id) => {
+    try {
+        let sql = `SELECT * FROM tbl_filme JOIN tbl_usuario_filme_fav ON tbl_filme.id = tbl_usuario_filme_fav.id_filme WHERE id_usuario = ${id}`
+
+        let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
+        return rsnacionalidade
+        
+    } catch (error) {
+        return false
+    }
+}
+const selectFilmeFav = async(id, idU) => {
+    try {
+        let sql = `SELECT * FROM tbl_filme JOIN tbl_usuario_filme_fav ON tbl_filme.id = tbl_usuario_filme_fav.id_filme WHERE id_filme = ${id} AND id_usuario = ${idU}`
+
+        let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
+        return rsnacionalidade
+        
+    } catch (error) {
+        return false
+    }
+}
+const deleteFilmeFav = async(id, idU) => {
+    try {
+        let sql = `DELETE FROM tbl_usuario_filme_fav WHERE id_filme = ${id} AND id_usuario = ${idU}`
+        console.log("teste " + sql);
+
+
+        let rs = await prisma.$queryRawUnsafe(sql)
+        console.log(sql);
+        if(rs)
+            return rs
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
+
+const insertAssistido = async(idUsuario, idFilme)=>{
+    try {
+        let sql = `INSERT INTO tbl_usuario_filme_assistido (id_usuario, id_filme) VALUES ('${idUsuario}', '${idFilme}')`
+        console.log(sql);
+
+        let rs = await prisma.$executeRawUnsafe(sql)
+
+        if(rs)
+            return rs
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+const selectFilmesAssistido = async(id) => {
+    try {
+        let sql = `SELECT * FROM tbl_filme JOIN tbl_usuario_filme_assistido ON tbl_filme.id = tbl_usuario_filme_assistido.id_filme WHERE id_usuario = ${id}`
+
+        let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
+        return rsnacionalidade
+        
+    } catch (error) {
+        return false
+    }
+}
+const selectFilmeAssistido = async(id, idU) => {
+    try {
+        let sql = `SELECT * FROM tbl_filme JOIN tbl_usuario_filme_assistidp ON tbl_filme.id = tbl_usuario_filme_assistido.id_filme WHERE id_filme = ${id} AND id_usuario = ${idU}`
+
+        let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
+        return rsnacionalidade
+        
+    } catch (error) {
+        return false
+    }
+}
+const deleteFilmeAssistido = async(id, idU) => {
+    try {
+        let sql = `DELETE FROM tbl_usuario_filme_assistido WHERE id_filme = ${id} AND id_usuario = ${idU}`
+        console.log("teste " + sql);
+
+
+        let rs = await prisma.$queryRawUnsafe(sql)
+        console.log(sql);
+        if(rs)
+            return rs
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
 
 module.exports={
     selectAllUsuarios,
@@ -116,5 +224,13 @@ module.exports={
     insertUsuario,
     updateUsuario,
     deleteUsuario,
-    selectLastId
+    selectLastId,
+    insertFav,
+    selectFilmesFav,
+    selectFilmeFav,
+    deleteFilmeFav,
+    insertAssistido,
+    selectFilmesAssistido,
+    selectFilmeAssistido,
+    deleteFilmeAssistido
 }

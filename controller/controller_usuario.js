@@ -202,11 +202,119 @@ const setExcluirUsuario = async(id) => {
     }
 
 }
+const insertFilmeFav = async(idUsuario, idFilme) => {
+    try {
+        let idU = idUsuario
+        let idF = idFilme
+        let usuarioJSON = {}
+    
+        if(idU == '' || idU == undefined || isNaN(idU) ||
+        idF == '' || idF == undefined || isNaN(idF)
+    ){
+            return message.ERROR_INVALID_ID //400
+        }else{
+            let insert = await usuarioDAO.insertFav(idU, idF)
+            if(insert){
+    
+                if(insert.length > 0){
+                    usuarioJSON.favoritado = dadosUsuario
+                    usuarioJSON.status_code = 200
+                    return usuarioJSON
+                }else{
+                    return message.ERROR_NOT_FOUND
+                }
+    
+            }else{
+                return message.ERROR_INTERNAL_SERVER_DB //500
+            }
+        }
+        } catch (error) {
+            return message.ERROR_INTERNAL_SERVER
+        }
+}
+const insertFilmeAssistido = async(idUsuario, idFilme) => {
+    try {
+        let idU = idUsuario
+        let idF = idFilme
+        let usuarioJSON = {}
+    
+        if(idU == '' || idU == undefined || isNaN(idU) ||
+        idF == '' || idF == undefined || isNaN(idF)
+    ){
+            return message.ERROR_INVALID_ID //400
+        }else{
+            let insert = await usuarioDAO.insertAssistido(idU, idF)
+            if(insert){
+                if(insert.length > 0){
+                    usuarioJSON.favoritado = dadosUsuario
+                    usuarioJSON.status_code = 200
+                    return usuarioJSON
+                }else{
+                    return message.ERROR_NOT_FOUND
+                }
+    
+            }else{
+                return message.ERROR_INTERNAL_SERVER_DB //500
+            }
+        }
+        } catch (error) {
+            return message.ERROR_INTERNAL_SERVER
+        }
+}
+const setExcluirFav = async(idUsuario, idFilme) => {
+    try {
+        let idU = idUsuario
+        let idF = idFilme
+        if(idU == '' || idU == null || idU == undefined || isNaN(idU) ||
+        idF == '' || idF == undefined || isNaN(idF)
+    ){
+            return message.ERROR_INVALID_ID
+        }else{
 
+                let deletado = await usuarioDAO.deleteFilmeFav(idF, idU)
+     
+                if(deletado){
+                    return message.SUCCESS_DELETED_ITEM
+                }else{
+                    return message.ERROR_INTERNAL_SERVER_DB //500
+                }
+        }
+    } catch (error) {
+        return message.ERROR_INTERNAL_SERVER
+    }
+
+}
+const setExcluirAssistido = async(idUsuario, idFilme) => {
+    try {
+        let idU = idUsuario
+        let idF = idFilme
+        if(idU == '' || idU == null || idU == undefined || isNaN(idU) ||
+        idF == '' || idF == undefined || isNaN(idF)
+    ){
+            return message.ERROR_INVALID_ID
+        }else{
+
+                let deletado = await usuarioDAO.deleteFilmeAssistido(idF, idU)
+     
+                if(deletado){
+                    return message.SUCCESS_DELETED_ITEM
+                }else{
+                    return message.ERROR_INTERNAL_SERVER_DB //500
+                }
+        }
+    } catch (error) {
+        return message.ERROR_INTERNAL_SERVER
+    }
+
+}
 module.exports={
     getListarUsuario,
     getBuscarUsuario,
     setInserirNovoUsuario,
     setAtualizarUsuario,
-    setExcluirUsuario
+    setExcluirUsuario,
+    insertFilmeFav,
+    setExcluirFav,
+    insertFilmeAssistido,
+    setExcluirAssistido
 }
