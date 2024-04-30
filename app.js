@@ -319,7 +319,10 @@ app.get('/v2/acmefilmes/usuario', cors(), async function(request, response) {
     response.json(dadosUsuario)  
 })
 app.get('/v2/acmefilmes/usuario/:id', cors(), async function(request, response) {
-    
+    let id = request.params.id
+    let dado = await controllerUsuario.getBuscarUsuario(id)
+    response.status(dado.status_code)
+    response.json(dado)  
 })
 app.post('/v2/acmefilmes/usuario', cors(), bodyParserJSON, async function(request, response) {
     let contentType = request.headers['content-type']
@@ -328,11 +331,20 @@ app.post('/v2/acmefilmes/usuario', cors(), bodyParserJSON, async function(reques
     response.status(newUsuario.status_code)
     response.json(newUsuario)   
 })
-app.put('/v2/acmefilmes/usuario', cors(), bodyParserJSON, async function(request, response) {
-    
+app.put('/v2/acmefilmes/usuario/:id', cors(), bodyParserJSON, async function(request, response) {
+    let contentType = request.headers['content-type']
+    let id = request.params.id
+    let dadosPUT = request.body
+
+    let resultUpdate = await controllerUsuario.setAtualizarUsuario(id, dadosPUT, contentType)
+    response.status(resultUpdate.status_code)
+    response.json(resultUpdate)
 })
 app.delete('/v2/acmefilmes/usuario/:id', cors(), async function(request, response) {
-    
+    let id = request.params.id
+    let dados = await controllerUsuario.setExcluirUsuario(id)
+    response.status(dados.status_code)
+    response.json(dados)  
 })
 
 

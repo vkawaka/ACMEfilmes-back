@@ -34,23 +34,23 @@ const getListarUsuario = async() => {
     }
 }
 
-const getBuscarAdm = async(id) => {
+const getBuscarUsuario = async(id) => {
     try {
-    let idAdm = id
-    let admJSON = {}
+    let idUsuario = id
+    let usuarioJSON = {}
 
-    if(idAdm == '' || idAdm == undefined || isNaN(idAdm)){
+    if(idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)){
         return message.ERROR_INVALID_ID //400
     }else{
-        let dadosAdm = await admDAO.selectAdmById(idAdm)
-        if(dadosAdm){
+        let dadosUsuario = await usuarioDAO.selectUsuarioById(idUsuario)
+        if(dadosUsuario){
 
-            if(dadosAdm.length > 0){
+            if(dadosUsuario.length > 0){
 
-                admJSON.filme = dadosAdm
-                admJSON.status_code = 200
+                usuarioJSON.usuario = dadosUsuario
+                usuarioJSON.status_code = 200
 
-                return admJSON
+                return usuarioJSON
             }else{
                 return message.ERROR_NOT_FOUND
             }
@@ -117,36 +117,50 @@ const setInserirNovoUsuario = async(dados, contentType) => {
     }
 }
 
-const setAtualizarAdm = async(id, dadosAdm, contentType) => {
+const setAtualizarUsuario = async(id, dados, contentType) => {
     try {
-        let idAdm = id
+        let idUsuario = id
         if(String(contentType).toLowerCase() == 'application/json'){
-            if(idAdm == '' || idAdm == null || idAdm == undefined || isNaN(idAdm)){
+            if(idUsuario == '' || idUsuario == null || idUsuario == undefined || isNaN(idUsuario)){
                 return message.ERROR_INVALID_ID
             }else{
-                let admAtt = {}
+                let usuarioAtt = {}
 
-                if(dadosAdm.usuario == ''                     || dadosAdm.usuario == undefined            || dadosAdm.usuario == null            || dadosAdm.usuario.length > 45       ||
-                dadosAdm.senha == ''                     || dadosAdm.senha == undefined            || dadosAdm.senha == null            || dadosAdm.senha.length > 30       ||
-                dadosAdm.email == ''                     || dadosAdm.email == undefined            || dadosAdm.email == null            || dadosAdm.email.length > 45       ||
-            //    dadosAdm.chefe == ''                     || dadosAdm.chefe == undefined            || dadosAdm.chefe == null            ||
-               dadosAdm.nome == '' || dadosAdm.nome == undefined  || dadosAdm.nome == null || dadosAdm.nome.length > 45
+                if(dados.usuario == ''                     || dados.usuario == undefined            || dados.usuario == null            || dados.usuario.length > 16       ||
+                dados.senha == ''                     || dados.senha == undefined            || dados.senha == null            || dados.senha.length > 32       ||
+                dados.email == ''                     || dados.email == undefined            || dados.email == null            || dados.email.length > 255       ||
+               dados.nome == '' || dados.nome == undefined  || dados.nome == null || dados.nome.length > 100
                 ){
                     return message.ERROR_INVALID_REQUIRED_FIELDS
                 }else{
-                    let idVerify = await admDAO.selectAdmById(idAdm)
+                    let verify = false
+                    if (dados.foto != null && dados.foto != undefined && dados.foto != '') {
+                        if (dados.foto == '') {
+                            return message.ERROR_INVALID_REQUIRED_FIELDS
+                        } else {
+                        verify = true   
+                        }
+                    } else {
+                        verify = true
+                    }
+                    
+                    let idVerify = await usuarioDAO.selectUsuarioById(idUsuario)
 
                     if(idVerify.length > 0){
-                        let att = await admDAO.updateAdm(idAdm, dadosAdm)
-    
-                        if(att){
-                            let dado = await admDAO.selectAdmById(idAdm)
-                            admAtt.genero = dado
-                            admAtt.status = message.SUCCESS_UPDATED_ITEM.status
-                            admAtt.status_code = message.SUCCESS_UPDATED_ITEM.status_code
-                            admAtt.message = message.SUCCESS_UPDATED_ITEM.message
+                        let dado = await usuarioDAO.updateUsuario(idUsuario, dados)
+                        console.log(dado);
 
-                            return admAtt
+                        if(dado){
+
+                            let dadosU = await usuarioDAO.selectUsuarioById(idUsuario)
+
+
+                            usuarioAtt.usuario = dadosU
+                            usuarioAtt.status = message.SUCCESS_UPDATED_ITEM.status
+                            usuarioAtt.status_code = message.SUCCESS_UPDATED_ITEM.status_code
+                            usuarioAtt.message = message.SUCCESS_UPDATED_ITEM.message
+
+                            return usuarioAtt
                         }else{
                             return message.ERROR_INTERNAL_SERVER_DB
                         }
@@ -163,16 +177,16 @@ const setAtualizarAdm = async(id, dadosAdm, contentType) => {
     }
 }
 
-const setExcluirAdm = async(id) => {
+const setExcluirUsuario = async(id) => {
     try {
-        let idAdm = id
-        if(idAdm == '' || idAdm == null || idAdm == undefined || isNaN(idAdm)){
+        let idUsuario = id
+        if(idUsuario == '' || idUsuario == null || idUsuario == undefined || isNaN(idUsuario)){
             return message.ERROR_INVALID_ID
         }else{
-            let idVerify = await admDAO.selectAdmById(idAdm)
+            let idVerify = await usuarioDAO.selectUsuarioById(idUsuario)
 
             if(idVerify.length > 0){
-                let deletado = await admDAO.deleteAdm(idAdm)
+                let deletado = await usuarioDAO.deleteUsuario(idUsuario)
      
                 if(deletado){
                     return message.SUCCESS_DELETED_ITEM
@@ -191,8 +205,8 @@ const setExcluirAdm = async(id) => {
 
 module.exports={
     getListarUsuario,
-    getBuscarAdm,
+    getBuscarUsuario,
     setInserirNovoUsuario,
-    setAtualizarAdm,
-    setExcluirAdm
+    setAtualizarUsuario,
+    setExcluirUsuario
 }

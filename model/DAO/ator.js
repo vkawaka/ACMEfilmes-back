@@ -113,11 +113,28 @@ const selectLastIdAtor =  async() =>{
     }
 }
 
+const insertFilmeAtor = async(id_filme, id_ator) => {
+    try {
+        let sql = `INSERT INTO tbl_filme_ator (id_filme, id_ator) VALUES ('${id_filme}', '${id_ator}')`
+        console.log(sql);
+
+        let rs = await prisma.$executeRawUnsafe(sql)
+
+        if(rs)
+            return rs
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
 module.exports={
     selectAllAtores,
     selectAtorById,
     insertAtor,
     updateAtor,
     deleteAtor,
-    selectLastIdAtor
+    selectLastIdAtor,
+    insertFilmeAtor
 }

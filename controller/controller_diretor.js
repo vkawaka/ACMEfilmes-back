@@ -185,26 +185,17 @@ const setAtualizarDiretor = async(id, dadosBody, contentType) => {
                             let getDiretor = await diretorDAO.selectDiretorById(idDiretor)
                             console.log(getDiretor);
                             if (att) {
-                                let diretor_ant = await nacionalidadeDAO.selectNacionalidadeByDiretorU(idDiretor)
-                                    if (diretor_ant) {
+                                    
+                                await nacionalidadeDAO.deleteNacionalidadeByDiretor(idDiretor)
 
-                                        
-                                        
-                                        await nacionalidadeDAO.deleteNacionalidadeByDiretor(idDiretor)
-
-                                        for (let index = 0; index < arrayNacs.length; index++) {
-                                            const nacUpdate = arrayNacs[index];
-                                            const nacExist = diretor_ant[index]
+                                for (let index = 0; index < arrayNacs.length; index++) {
+                                    const nacUpdate = arrayNacs[index];
 
                                                 
-                                            await nacionalidadeDAO.insertDiretorNacionalidade(idDiretor, nacUpdate)
-                                            
-                                            
-                                        }
+                                    await nacionalidadeDAO.insertDiretorNacionalidade(idDiretor, nacUpdate)
+                                }
                                        
-                                    }else{
-                                        return message.ERROR_INTERNAL_SERVER_DB
-                                    }
+                              
                                 let dadosUpdate = getDiretor[0]
                                 let nasci = await nacionalidadeDAO.selectNacionalidadeByDiretor(dadosUpdate.id)
                                 dadosUpdate.nacionalidade = nasci

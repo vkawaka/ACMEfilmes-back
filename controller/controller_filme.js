@@ -9,6 +9,10 @@
 
 //Import o arquivo DAO que fará a comunicação com o banco de dados.
 const filmeDAO = require('../model/DAO/filme.js')
+const atorDAO = require('../model/DAO/ator.js')
+const diretorDAO = require('../model/DAO/diretor.js')
+const generoDAO = require('../model/DAO/genero.js')
+const classificacao = require('../model/DAO/classificacao.js')
 
 //Import o arquivo config do projeto.
 const message = require('../module/config.js')
@@ -19,7 +23,9 @@ const setInserirNovoFilme = async(dadosFilme, contentType) => {
     try {
         if(String(contentType).toLowerCase() == 'application/json'){
             let novoFilmeJSON = {}
-
+            let atorArray = dadosFilme.ator
+            let diretorArray = dadosFilme.diretor
+            let generoArray = dadosFilme.genero
             if(dadosFilme.nome == ''                     || dadosFilme.nome == undefined            || dadosFilme.nome == null            || dadosFilme.nome.length > 80       ||
             dadosFilme.sinopse == ''                  || dadosFilme.sinopse == undefined         || dadosFilme.sinopse == null         || dadosFilme.sinopse.length > 65000 ||
             dadosFilme.duracao == ''                  || dadosFilme.duracao == undefined         || dadosFilme.duracao == null         || dadosFilme.duracao.length > 8     ||
@@ -52,10 +58,37 @@ const setInserirNovoFilme = async(dadosFilme, contentType) => {
 
                     //Validação para verificar se o DAO inseriu os dados no BD.
                     if(novoFilme){
-
                         let idDAO = await filmeDAO.selectLastIdFilme()
+                        let idFilme = idDAO[0].id
+                        console.log(idFilme)
+                        
+                        for (let index = 0; index < atorArray.length; index++) {
+                            const element = atorArray[index];
+                            let ator = await atorDAO.insertFilmeAtor(idFilme, element)
+                            console.log(ator);
+                        }
 
-                        console.log(idDAO)
+                        for (let index = 0; index < atorArray.length; index++) {
+                            const element = atorArray[index];
+                            let ator = await atorDAO.insertFilmeAtor(idFilme, element)
+                            console.log(ator);
+                        }
+
+                        for (let index = 0; index < atorArray.length; index++) {
+                            const element = atorArray[index];
+                            let ator = await atorDAO.insertFilmeAtor(idFilme, element)
+                            console.log(ator);
+                        }
+
+
+                        let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor([0].id)
+                        dadosBody.nacionalidade = nasci
+                        let sexo = await sexoDAO.selectSexoById(dadosBody.id_sexo)
+                        dadosBody.id = lastId[0].id
+                        delete dadosBody.id_sexo
+                        dadosBody.sexo = sexo
+
+                        
                         dadosFilme.id = idDAO[0].id
 
                         novoFilmeJSON.filme = dadosFilme

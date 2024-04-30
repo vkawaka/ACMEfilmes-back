@@ -36,18 +36,6 @@ const selectNacionalidadeByAtor = async(id) => {
     }
 }
 
-const selectNacionalidadeByAtorU = async(id_ator) => {
-    try {
-        let sql = `SELECT id FROM tbl_ator_nacionalidade WHERE id_ator = ${id_ator};`
-
-        let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
-        return rsnacionalidade
-        
-    } catch (error) {
-        return false
-    }
-}
-
 const selectNacionalidadeAtorId = async(id) => {
     try {
         let sql = `SELECT * FROM tbl_ator_nacionalidade WHERE id = ${id};`
@@ -142,19 +130,6 @@ const insertDiretorNacionalidade = async(id_diretor, id_nacionalidade) => {
         return false
     }
 }
-
-const selectNacionalidadeByDiretorU = async(id_diretor) => {
-    try {
-        let sql = `SELECT id FROM tbl_diretor_nacionalidade WHERE id_diretor = ${id_diretor};`
-
-        let rsnacionalidade = await prisma.$queryRawUnsafe(sql)
-        return rsnacionalidade
-        
-    } catch (error) {
-        return false
-    }
-}
-
 const selectNacionalidadeDiretorId = async(id) => {
     try {
         let sql = `SELECT * FROM tbl_diretor_nacionalidade WHERE id = ${id};`
@@ -226,9 +201,7 @@ module.exports={
     insertAtorNacionalidade,
     insertDiretorNacionalidade,
     updateAtorNacionalidade,
-    selectNacionalidadeByAtorU,
     selectNacionalidadeAtorId,
-    selectNacionalidadeByDiretorU,
     selectNacionalidadeDiretorId,
     updateDiretorNacionalidade,
     deleteNacionalidadeByAtor,

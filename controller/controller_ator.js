@@ -176,16 +176,13 @@ const setAtualizarAtor = async(id, dadosBody, contentType) => {
                             let att = await atorDAO.updateAtor(idAtor, dadosBody)
                             let getAtor = await atorDAO.selectAtorById(idAtor)
                             if (att) {
-                                let ator_ant = await nacionalidadeDAO.selectNacionalidadeByAtorU(idAtor)
-                                    if (ator_ant) {
-                                        console.log(ator_ant);
-                                        for (let index = 0; index < ator_ant.length; index++) {
-                                            const element = ator_ant[index];
-                                            let nacionalidade = await nacionalidadeDAO.updateAtorNacionalidade(element.id, idAtor, arrayNacs[index])
-                                            console.log(nacionalidade);
-                                        }
-                                    }else{
-                                        return message.ERROR_INTERNAL_SERVER_DB
+                                await nacionalidadeDAO.deleteNacionalidadeByAtor(idAtor)
+
+                                for (let index = 0; index < arrayNacs.length; index++) {
+                                    const nacUpdate = arrayNacs[index];
+
+                                                
+                                    await nacionalidadeDAO.insertAtorNacionalidade(idAtor, nacUpdate)
                                 }
                                 let dadosUpdate = getAtor[0]
                                 let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(getAtor[0].id)

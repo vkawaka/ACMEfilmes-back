@@ -24,13 +24,13 @@ const selectAllUsuarios = async() =>{
     }
 }
 
-const selectAdmById = async(id) => {
+const selectUsuarioById = async(id) => {
     try{
-        let sql = `select * from tbl_adm where tbl_adm.id = ${id}`
+        let sql = `select * from tbl_usuario where tbl_usuario.id = ${id}`
     
-        let rsadmId = await prisma.$queryRawUnsafe(sql)
+        let rsId = await prisma.$queryRawUnsafe(sql)
     
-       return rsadmId
+       return rsId
     
         } catch(error){
             return false
@@ -61,25 +61,34 @@ try {
 }
 }
 
-const updateAdm = async(id, dadosBody) => {
+const updateUsuario = async(id, dadosBody) => {
     try {
-        let sql = `UPDATE tbl_adm SET usuario = '${dadosBody.usuario}', nome = '${dadosBody.nome}', senha = '${dadosBody.senha}', email = '${dadosBody.email}', chefe = ${dadosBody.chefe}  WHERE tbl_adm.id = ${id}`
+        let sql 
+    if(dadosBody.foto == null || dadosBody.foto == undefined || dadosBody.foto == ''){
+        sql = `UPDATE tbl_usuario SET usuario = "${dadosBody.usuario}", email = "${dadosBody.email}", senha = "${dadosBody.senha}", nome = "${dadosBody.nome}", foto = "https://i.pinimg.com/564x/5e/1a/d0/5e1ad070e230f8e7059a5957151ca730.jpg" WHERE tbl_usuario.id = ${id}`
+    }else{
+        sql = `UPDATE tbl_usuario SET usuario = "${dadosBody.usuario}", email = "${dadosBody.email}", senha = "${dadosBody.senha}", nome = "${dadosBody.nome}", foto = "${dadosBody.foto}" WHERE tbl_usuario.id = ${id}`
 
-        let rsupdateadm = await prisma.$queryRawUnsafe(sql)
+    }
+    console.log(sql);
 
-        if(rsupdateadm)
-            return rsupdateadm
+        let rsupdate = await prisma.$queryRawUnsafe(sql)
+
+        if(rsupdate)
+            return rsupdate
         else
             return false
 
     } catch (error) {
+        console.log("aqui buaa");
+
         return false
     }
 }
 
-const deleteAdm = async(id) => {
+const deleteUsuario = async(id) => {
     try {
-        let sql = `DELETE FROM tbl_adm WHERE tbl_adm.id = ${id}`
+        let sql = `DELETE FROM tbl_usuario WHERE tbl_usuario.id = ${id}`
 
         let rsdeleted = prisma.$queryRawUnsafe(sql)
         return rsdeleted
@@ -103,9 +112,9 @@ const selectLastId =  async() =>{
 
 module.exports={
     selectAllUsuarios,
-    selectAdmById,
+    selectUsuarioById,
     insertUsuario,
-    updateAdm,
-    deleteAdm,
+    updateUsuario,
+    deleteUsuario,
     selectLastId
 }
