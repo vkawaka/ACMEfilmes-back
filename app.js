@@ -34,6 +34,8 @@ app.use((request, response, next) =>{
  const controllerAdm = require('./controller/controller_adm.js')
 
  const controllerUsuario = require('./controller/controller_usuario.js')
+
+ const controllerNacionalidade = require('./controller/controller_nacionalidade.js')
  
  /******************************************************************************************************/
 
@@ -87,7 +89,7 @@ app.get('/v2/acmefilmes/filmeNome', cors(), async function(request, response, ne
 
 //EndPoint: Retorna um filme do BD de acordo com o ID
     //Período de funcionamento: fev/2024
-app.get('/v2/acmefilmes/filmeId/:id', cors(), async function(request, response, next){
+app.get('/v2/acmefilmes/filme/:id', cors(), async function(request, response, next){
     let idFilme = request.params.id
     let dadosFilme = await controllerFilmes.getBuscarFilme(idFilme)
     response.status(dadosFilme.status_code)
@@ -122,6 +124,12 @@ app.delete('/v2/acmefilmes/filme/:id', cors(), async function(request, response)
 })
 
 /*********************************************************************************************************************************************/
+
+app.get('/v2/acmefilmes/nacionalidade', cors(), async function(request, response) {
+    let dadosGeneros = await controllerNacionalidade.getListarNacionalidade()
+    response.status(dadosGeneros.status_code)
+    response.json(dadosGeneros)
+})
 
 app.get('/v2/acmefilmes/genero', cors(), async function(request, response) {
     let dadosGeneros = await controllerGeneros.getListarGeneros()

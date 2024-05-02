@@ -85,12 +85,13 @@ const setInserirNovoFilme = async(dadosFilme, contentType) => {
                         dadosFilme.ator = ator
                         let diretor = await diretorDAO.selectDiretorByFilme(idFilme)
                         dadosFilme.diretor = diretor
-                        dadosFilme.favorito = fav
 
                         let classi = await classificacaoDAO.selectClassificacaoById(dadosFilme.id_classificacao)
                         delete dadosFilme.id_classificacao
                         dadosFilme.classificacao = classi
                         dadosFilme.id = idDAO[0].id
+
+                        console.log(dadosFilme);
 
                         novoFilmeJSON.filme = dadosFilme
                         novoFilmeJSON.status = message.SUCCESS_CREATED_ITEM.status
@@ -233,6 +234,9 @@ const setExcluirFilme = async(id) => {
         let filmeById = await filmeDAO.selectByIdFilme(idFilme)
 
         if(filmeById.length > 0){
+            await atorDAO.deleteFilmeAtor(idFilme)
+            await diretorDAO.deleteFilmeDiretor(idFilme)
+            await generoDAO.deleteFilmeGenero(idFilme)
             let filmeDeletado = await filmeDAO.deleteFilme(idFilme)
  
             if(filmeDeletado){

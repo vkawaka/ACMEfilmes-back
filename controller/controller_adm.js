@@ -21,7 +21,7 @@ const getListarAdm = async() => {
     if(dadosAdm){
         if(dadosAdm.length > 0){
             
-            admJSON.generos = dadosAdm
+            admJSON.administrador = dadosAdm
             admJSON.quantidade = dadosAdm.length
             admJSON.status_code = 200
 
@@ -80,6 +80,7 @@ const setInserirNovoAdm = async(dadosAdm, contentType) => {
                 return message.ERROR_INVALID_REQUIRED_FIELDS //400
             }else{
                     let novoAdm = await admDAO.insertAdm(dadosAdm)
+                    console.log(novoAdm);
                     if(novoAdm){
 
                         let idDAO = await admDAO.selectLastIdAdm()

@@ -15,6 +15,7 @@ const insertClassificacao = async(dadosClassificacao) => {
         let sql = `INSERT INTO tbl_classificacao (faixa_etaria, classificacao, caracteristica, icone) VALUES
         ('${dadosClassificacao.faixa_etaria}', "${dadosClassificacao.classificacao}", "${dadosClassificacao.caracteristica}", "${dadosClassificacao.icone}")`
 
+        
         let rsClassificacao = await prisma.$executeRawUnsafe(sql)
 
         if(rsClassificacao)

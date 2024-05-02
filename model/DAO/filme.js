@@ -123,9 +123,10 @@ const deleteFilme = async(id) =>{
     try{
 
         let sql = `delete from tbl_filme where tbl_filme.id = ${id}`
+        console.log(sql);
     
         //Executa o sql no banco de dados
-        let rsdeletedfilme = await prisma.$queryRawUnsafe(sql)
+        let rsdeletedfilme = await prisma.$executeRawUnsafe(sql)
 
     
        return rsdeletedfilme
