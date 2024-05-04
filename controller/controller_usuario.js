@@ -63,6 +63,36 @@ const getBuscarUsuario = async(id) => {
         return message.ERROR_INTERNAL_SERVER
     }
 }
+const getBuscarUsuarioNome = async(nome) => {
+    try {
+    let usuarioJSON = {}
+    console.log(nome);
+
+    if(nome == '' || nome == undefined){
+        return message.ERROR_INVALID_ID //400
+    }else{
+        let dadosUsuario = await usuarioDAO.selectUsuarioByNome(nome)
+        if(dadosUsuario){
+
+            if(dadosUsuario.length > 0){
+
+                usuarioJSON.usuario = dadosUsuario
+                usuarioJSON.status_code = 200
+
+                return usuarioJSON
+            }else{
+                return message.ERROR_NOT_FOUND
+            }
+
+        }else{
+            return message.ERROR_INTERNAL_SERVER_DB //500
+        }
+    }
+    } catch (error) {
+        return message.ERROR_INTERNAL_SERVER
+    }
+}
+
 
 const setInserirNovoUsuario = async(dados, contentType) => {
     try{
@@ -316,5 +346,6 @@ module.exports={
     insertFilmeFav,
     setExcluirFav,
     insertFilmeAssistido,
-    setExcluirAssistido
+    setExcluirAssistido,
+    getBuscarUsuarioNome
 }

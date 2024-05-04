@@ -36,6 +36,21 @@ const selectUsuarioById = async(id) => {
             return false
         }
 }
+const selectUsuarioByNome = async(nome) => {
+    try{
+        let sql = `select * from tbl_usuario where tbl_usuario.usuario LIKE "%${nome}%" or tbl_usuario.nome LIKE "%${nome}%"`
+        console.log(sql);
+
+    
+        let rsId = await prisma.$queryRawUnsafe(sql)
+    
+       return rsId
+    
+        } catch(error){
+            return false
+        }
+}
+
 
 const insertUsuario  = async(dados) => {
 try {
@@ -232,5 +247,6 @@ module.exports={
     insertAssistido,
     selectFilmesAssistido,
     selectFilmeAssistido,
-    deleteFilmeAssistido
+    deleteFilmeAssistido,
+    selectUsuarioByNome
 }

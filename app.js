@@ -332,6 +332,13 @@ app.get('/v2/acmefilmes/usuario/:id', cors(), async function(request, response) 
     response.status(dado.status_code)
     response.json(dado)  
 })
+app.get('/v2/acmefilmes/usuarioNome', cors(), async function(request, response) {
+    let nome = request.query.nome
+    let dado = await controllerUsuario.getBuscarUsuarioNome(nome)
+    response.status(dado.status_code)
+    response.json(dado)  
+})
+
 app.post('/v2/acmefilmes/usuario', cors(), bodyParserJSON, async function(request, response) {
     let contentType = request.headers['content-type']
     let dadosBody = request.body

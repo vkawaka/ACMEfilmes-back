@@ -47,7 +47,7 @@ const getBuscarGenero = async(id) => {
 
             if(dadosGenero.length > 0){
 
-                generoJSON.filme = dadosGenero
+                generoJSON.genero = dadosGenero
                 generoJSON.status_code = 200
 
                 return generoJSON
