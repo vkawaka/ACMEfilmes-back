@@ -27,6 +27,7 @@ const selectAllAtores = async() =>{
 const selectAtorById = async(id) => {
     try{
         let sql = `select * from tbl_ator where tbl_ator.id = ${id}`
+
     
         let rsatorId = await prisma.$queryRawUnsafe(sql)
     

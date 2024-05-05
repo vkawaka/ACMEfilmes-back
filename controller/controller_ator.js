@@ -119,9 +119,10 @@ const getBuscarAtor = async(id) => {
             let atorJSON = {}
 
             let dadosAtor = await atorDAO.selectAtorById(idAtor)
-            if(dadosAtor){
-                console.log(dadosAtor)
 
+            if(dadosAtor){
+                if (dadosAtor.length > 0) {
+                    
                 let nasci = await nacionalidadeDAO.selectNacionalidadeByAtor(idAtor)
                 dadosAtor[0].nacionalidade = nasci
                 let sexo = await sexoDAO.selectSexoById(dadosAtor[0].id_sexo)
@@ -130,9 +131,13 @@ const getBuscarAtor = async(id) => {
                 dadosAtor[0].sexo = sexo
                 console.log(dadosAtor)
                 atorJSON.ator = dadosAtor
-                atorJSON.status = 200
+                atorJSON.status_code = 200
+                atorJSON.status = true
 
                 return atorJSON
+                }else{
+                    return message.ERROR_NOT_FOUND
+                }
             }else{
                 return message.ERROR_INTERNAL_SERVER_DB
             }

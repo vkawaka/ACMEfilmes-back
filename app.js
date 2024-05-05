@@ -216,7 +216,7 @@ app.get('/v2/acmefilmes/ator/:id', cors(), async function(request, response) {
     let idP = request.params.id
     let dados = await controllerAtor.getBuscarAtor(idP)
 
-    response.status(dados.status)
+    response.status(dados.status_code)
     response.json(dados)
 })
 app.post('/v2/acmefilmes/ator', cors(), bodyParserJSON, async function(request, response) {
@@ -232,6 +232,7 @@ app.put('/v2/acmefilmes/ator/:id', cors(), bodyParserJSON, async function(reques
     let dadosPUT = request.body
 
     let resultUpdateAtor = await controllerAtor.setAtualizarAtor(idAtor, dadosPUT, contentType)
+
     response.status(resultUpdateAtor.status_code)
     response.json(resultUpdateAtor)
 })
@@ -275,7 +276,7 @@ app.put('/v2/acmefilmes/diretor/:id', cors(), bodyParserJSON, async function(req
 })
 app.delete('/v2/acmefilmes/diretor/:id', cors(), async function(request, response) {
     let idAtor = request.params.id
-    let dadosAtor = await controllerAtor.setDeletarAtor(idAtor)
+    let dadosAtor = await controllerDiretor.setDeletarDiretor(idAtor)
     response.status(dadosAtor.status_code)
     response.json(dadosAtor)
 })
