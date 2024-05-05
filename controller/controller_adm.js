@@ -47,7 +47,7 @@ const getBuscarAdm = async(id) => {
 
             if(dadosAdm.length > 0){
 
-                admJSON.filme = dadosAdm
+                admJSON.adm = dadosAdm
                 admJSON.status_code = 200
 
                 return admJSON
