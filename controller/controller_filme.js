@@ -91,6 +91,8 @@ const setInserirNovoFilme = async(dadosFilme, contentType) => {
                         dadosFilme.classificacao = classi
                         dadosFilme.id = idDAO[0].id
 
+                        // let fav = await usuarioDAO.selectFilmeFav(idDAO[0].id, id)
+
                         console.log(dadosFilme);
 
                         novoFilmeJSON.filme = dadosFilme
@@ -109,6 +111,7 @@ const setInserirNovoFilme = async(dadosFilme, contentType) => {
             return message.ERROR_UNSUPORTED_CONTENT_TYPE //415
         }
     }catch (error) {
+        console.log(error)
         return message.ERROR_INTERNAL_SERVER
     }
 
@@ -267,7 +270,6 @@ const getListarFilmes = async() => {
             for (let index = 0; index < dadosFilmes.length; index++) {
                 const element = dadosFilmes[index];
                 let gen = await generoDAO.selectGeneroByFilme(element.id)
-                console.log(gen);
                 element.genero = gen
                 let ator = await atorDAO.selectAtorByFilme(element.id)
                 element.ator = ator
@@ -277,6 +279,62 @@ const getListarFilmes = async() => {
                 let classi = await classificacaoDAO.selectClassificacaoById(element.id_classificacao)
                 delete element.id_classificacao
                 element.classificacao = classi
+            }
+
+             //Cria o JSON para devolver para o app
+            filmesJSON.filmes = dadosFilmes
+            filmesJSON.quantidade = dadosFilmes.length
+            filmesJSON.status_code = 200
+
+            return filmesJSON
+        }else{
+            return message.ERROR_NOT_FOUND
+        }
+       
+    }else{
+        return message.ERROR_INTERNAL_SERVER_DB //500
+    }
+}
+//função para retornar todos os filmes.
+const getListarFilmesUsuario = async(id) => {
+    let filmesJSON = {}
+
+    //Chama a função do DAO para retornar os dados da tabela de filmes
+    let dadosFilmes = await filmeDAO.selectAllFilmes()
+
+    //Validação para verificar se existem dados
+    if(dadosFilmes){
+
+        if(dadosFilmes.length > 0 ){
+            for (let index = 0; index < dadosFilmes.length; index++) {
+                const element = dadosFilmes[index];
+                let gen = await generoDAO.selectGeneroByFilme(element.id)
+                element.genero = gen
+                let ator = await atorDAO.selectAtorByFilme(element.id)
+                element.ator = ator
+                let diretor = await diretorDAO.selectDiretorByFilme(element.id)
+                element.diretor = diretor
+
+                let classi = await classificacaoDAO.selectClassificacaoById(element.id_classificacao)
+                delete element.id_classificacao
+                element.classificacao = classi
+
+                let fav = await usuarioDAO.selectFilmeFav(element.id, id)
+                element.favorito = false
+                for (let index = 0; index < fav.length; index++) {
+                    const verify = fav[index];
+                    if (verify.id_filme == element.id) {
+                        element.favorito = true
+                    }
+                }
+                let assistido = await usuarioDAO.selectFilmeAssistido(element.id, id)
+                element.assistido = false
+                for (let index = 0; index < assistido.length; index++) {
+                    const verify = assistido[index];
+                    if (verify.id_filme == element.id) {
+                        element.assistido = true
+                    }
+                }
             }
 
              //Cria o JSON para devolver para o app
@@ -324,21 +382,7 @@ const getBuscarFilmeNome = async(filmeNome) => {
                         delete element.id_classificacao
                         element.classificacao = classi
 
-                        let select = await usuarioDAO.selectFilmeFav(idFilme, element.id_usuario)
-                        console.log(select);
-                        let fav = false
-                        if(select)
-                            fav = true
-                        else
-                            fav = false
-
-                        let assisti = await usuarioDAO.selectFilmeFav(element.id, element.id_usuario)
-                        console.log(select);
-                        let assistido = false
-                        if(assisti)
-                            assistido = true
-                        else
-                            assistido = false
+                        
                     }
 
                  //Cria o JSON para devolver para o app
@@ -404,12 +448,65 @@ const getBuscarFilme = async(id) => {
     }
 }
 
+const getBuscarFilmeUsuario = async(id, idU) => {
+    //Recebe o id do filme em uma variável local
+    let idFilme = id
+    let idUsuario = idU
+
+    //Cria o objeto JSON
+    let filmeJSON = {}
+
+    //Validação para verificar se o ID é válido (vazio, indefinido ou não numérico)
+    if(idFilme == '' || idFilme == undefined || isNaN(idFilme) || idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)){
+        return message.ERROR_INVALID_ID //400
+    }else{
+        //Encaminha o ID para o DAO buscar no BD
+        let dadosFilme = await filmeDAO.selectByIdFilme(idFilme)
+
+        //Verifica se o DAO retornou dados
+        if(dadosFilme){
+
+            //Validação para verificar a quantidade de itens encontrados
+            if(dadosFilme.length > 0){
+                let element = dadosFilme[0]
+                let gen = await generoDAO.selectGeneroByFilme(element.id)
+                        console.log(gen);
+                        element.genero = gen
+                        let ator = await atorDAO.selectAtorByFilme(element.id)
+                        element.ator = ator
+                        let diretor = await diretorDAO.selectDiretorByFilme(element.id)
+                        element.diretor = diretor
+        
+                        let classi = await classificacaoDAO.selectClassificacaoById(element.id_classificacao)
+                        delete element.id_classificacao
+                        element.classificacao = classi
+
+                        let fav = await usuarioDAO.selectFilmeFav
+                
+                
+                //Cria o JSON para retorno
+                filmeJSON.filme = dadosFilme
+                filmeJSON.status_code = 200
+
+                return filmeJSON
+            }else{
+                return message.ERROR_NOT_FOUND
+            }
+
+        }else{
+            return message.ERROR_INTERNAL_SERVER_DB //500
+        }
+    }
+}
+
 module.exports={
     setInserirNovoFilme,
     setAtualizarFilme,
     setExcluirFilme,
     getListarFilmes,
     getBuscarFilme,
-    getBuscarFilmeNome
+    getBuscarFilmeNome,
+    getListarFilmesUsuario,
+    getBuscarFilmeUsuario
 }
 

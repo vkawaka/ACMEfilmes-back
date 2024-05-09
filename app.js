@@ -62,6 +62,13 @@ app.get('/v2/acmefilmes/filmes', cors(), async function(request, response){
     response.json(dadosFilmes)
    
 })
+app.get('/v2/acmefilmes/filmes/usuario/:idU', cors(), async function(request, response){
+    let id = request.params.idU
+    let dadosFilmes = await controllerFilmes.getListarFilmesUsuario(id)
+    response.status(dadosFilmes.status_code)
+    response.json(dadosFilmes)
+   
+})
 
 //1.0: retorna um filmes de acordo com o id
     //Período de funcionamento: jan/2024 - fev/2024

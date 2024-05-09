@@ -245,14 +245,10 @@ const insertFilmeFav = async(idUsuario, idFilme) => {
         }else{
             let insert = await usuarioDAO.insertFav(idU, idF)
             if(insert){
-    
-                if(insert.length > 0){
-                    usuarioJSON.favoritado = dadosUsuario
-                    usuarioJSON.status_code = 200
+
+                    usuarioJSON.favoritado = message.SUCCESS_FAVORITE_ITEM.message
+                    usuarioJSON.status_code = message.SUCCESS_UPDATED_ITEM.status_code
                     return usuarioJSON
-                }else{
-                    return message.ERROR_NOT_FOUND
-                }
     
             }else{
                 return message.ERROR_INTERNAL_SERVER_DB //500
